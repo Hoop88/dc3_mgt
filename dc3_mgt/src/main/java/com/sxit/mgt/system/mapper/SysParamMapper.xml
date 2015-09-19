@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.SysParamDao">
+	 
+
+	 <resultMap id="SysParamMap" type="SysParams" >
+	    <id column="params_id" property="paramsId" jdbcType="BIGINT" />
+		<result column="params_name" property="paramsName" jdbcType="VARCHAR" />
+		<result column="params_value" property="paramsValue" jdbcType="VARCHAR" />
+		<result column="params_desc" property="paramsDesc" jdbcType="VARCHAR" />
+
+	 </resultMap>
+
+	<select id="getSysParamList" resultMap="SysParamMap" parameterType="java.util.Map">
+		select
+		params_id,
+		params_name,
+		params_value,
+		params_desc
+		from
+		sys_params
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             params_name like CONCAT('%','${searchTxt}','%' )
+	             or
+	             params_value like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by params_id desc
+	</select>
+
+	<select id="getHaveSysParamList" resultMap="SysParamMap">
+		select
+		params_id,
+		params_name,
+		params_value,
+		params_desc
+		from
+		sys_params
+		where params_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.paramsId}
+		</foreach>
+	</select>
+
+	<select id="getSysParamById" resultMap="SysParamMap" parameterType="java.lang.Long">
+		select
+		params_id,
+		params_name,
+		params_value,
+		params_desc
+		from
+		sys_params
+		where params_id =  #{paramsId}
+    </select>
+
+	<insert id="insert" parameterType="SysParams">
+		insert into
+		sys_params(
+		params_id,
+		params_name,
+		params_value,
+		params_desc
+		)
+		values
+		(
+		#{paramsId},
+		#{paramsName},
+		#{paramsValue},
+		#{paramsDesc}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_params(
+		params_id,
+		params_name,
+		params_value,
+		params_desc
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.paramsId},
+			#{obj.paramsName},
+			#{obj.paramsValue},
+			#{obj.paramsDesc}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysParams">
+		update sys_params
+		set
+		params_id = #{paramsId},
+		params_name = #{paramsName},
+		params_value = #{paramsValue},
+		params_desc = #{paramsDesc}
+		where params_id =
+		#{paramsId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_params
+			set
+			params_id = #{obj.paramsId},
+			params_name = #{obj.paramsName},
+			params_value = #{obj.paramsValue},
+			params_desc = #{obj.paramsDesc}
+			where params_id =
+			#{obj.paramsId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from sys_params where params_id =
+		#{paramsId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update sys_params
+		set
+		state = 2
+		where params_id =
+		#{paramsId}
+	</update>
+	<update id="delete" parameterType="java.lang.Long">
+		delete from sys_params
+		where params_id =
+		#{paramsId}
+	</update>
+
+	<select id="getSysParamCount" resultType="int">
+		select count(1)
+		from sys_params
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select params_id from sys_params
+	</select>
+
+</mapper>

@@ -1,0 +1,62 @@
+{
+    "header":{
+        "code":0,
+        "message":"请求成功"
+    },
+    "data":{
+        "menu":[
+            {
+                "menuItems":[
+
+                ],
+                "menuId":0,
+                "menuName":"首页",
+                "href":"Main",
+                "navigation":"",
+                "parentId":0,
+                "className":"icon-home"
+            },
+            {
+                "menuItems":[
+                    {
+                        "menuItems":[
+
+                        ],
+                        "menuId":18,
+                        "menuName":"用户管理",
+                        "href":"Manage.Accounts",
+                        "navigation":"系统管理 > 用户管理",
+                        "parentID":1,
+                        "className":"icon-settings"
+                    },
+                    {
+                        "menuItems":[
+
+                        ],
+                        "menuId":6,
+                        "menuName":"会议管理",
+                        "href":"Manage.Meet",
+                        "navigation":"系统管理 > 会议管理",
+                        "parentId":1,
+                        "className":"icon-globe"
+                    }
+                ],
+                "menuId":1,
+                "menuName":"系统管理",
+                "href":"Manage.Accounts",
+				"not": true,
+                "navigation":"系统管理 > 用户管理",
+                "parentId":0,
+                "className":"icon-folder-alt"
+            }
+        ],
+        "user":{
+            "userId":1,
+            "userName":"张如兵",
+			"logo":null,
+            "corpName":null,
+            "depName":null,
+            "userType":1
+        }
+    }
+}

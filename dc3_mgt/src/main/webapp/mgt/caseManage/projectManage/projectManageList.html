@@ -1,0 +1,222 @@
+<div ng-controller="projectManageListController" ng-init="initializeController()">
+  <div class="btn-toolbar">
+    <input type="hidden" name="hidIsReLoad" id="hidIsReLoad" />
+    <div class="btn-group"></div>
+  </div>
+  <div class="well" style="min-height:450px;">
+    <div class="top_search form-inline">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="form-group">
+            <input type="text" name="title" placeholder="请输入检索内容"
+               ng-keypress="enter($event)"
+               ng-model="searchTxt" maxlength="100" class="input-xlarge form-control">
+          </div>
+          <a sysUser="button" ng-click="getProjectManages('search');" class="btn btn-success"><i class="glyphicon glyphicon-search"></i> 查询</a> </div>
+        <div class="col-md-3 "> <a class="btn grey-salt pull-right" sysUser="button" ng-click="exportExcel();"><i class="glyphicon glyphicon-share-alt"></i> 导出</a> </div>
+      </div>
+    </div>
+    <div class="dataTable">
+      <table class="table  table-hover dataTable no-footer table-bordered">
+        <thead>
+          <tr>
+            <th width="5%"></th>
+            <th >项目名称</th>
+            <th >项目code</th>
+            <th >城市</th>
+            <th >案场状态</th>
+            <th class="text-center" width="15%"> 操作 </th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr ng-repeat-start="projectManage in ProjectManages" ng-class="{'tableTrColor':projectManage.IsCurrent==1, 'opend': true}" on-finish-render-filters>
+            <td class="text-center"><span class="row-details"
+                ng-class="{'row-details-open':!projectManage.close, 'row-details-close': projectManage.close}"
+                ng-click="projectManage.close=!projectManage.close"></span></td>
+            <td> {{projectManage.projectName}} </td>
+            <td> {{projectManage.projectCode}} </td>
+            <td class="text-center"> {{projectManage.city}} </td>
+            <td >
+            
+              </td>
+            <td class="text-center">
+            
+            </td>
+          </tr>
+          <tr ng-repeat-end ng-show="!projectManage.close" ng-repeat="project2 in projectManage.children">
+            <td ></td>
+            <td style=" padding-left:25px">{{project2.projectName}}</td>
+            <td >{{project2.projectCode}}</td>
+            <td class="text-center">{{project2.city}}</td>
+            
+            <td 
+                 ng-class="{'text-center':true, 
+                 'success': project2.state==1,
+                 'warning': project2.state!=1
+                 }">
+            
+            {{projectStateMap[project2.state]}}</td>
+            <td class="text-center" style="width:400px">
+             <a class="btn btn-info btn-xs" type="button" ui-sref="CaseManage.ProjectUser({id:{{project2.projectId}}})" data-toggle="modal"  title="设置"> <span class="glyphicon glyphicon-danger"></span> 用户 </a>
+            <button class="btn btn-info btn-xs" type="button" href="#" data-toggle="modal" ng-click="editModal(project2.projectId);" title="修改"> <span class="glyphicon glyphicon-edit"></span> 修改 </button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <pagination max-size="10" rotate="false"  boundary-links="true" total-items="TotalRows" items-per-page="pageSize"
+                    ng-change="pageChanged()" ng-model="currentPage" class="pagination-sm"
+                    previous-text="上一页" next-text="下一页" first-text="首页" last-text="末页" style="margin: 0; display: block;"></pagination>
+    <span class="pagination_span">共{{TotalRows}}条,每页{{pageSize}}条,第{{currentPage}}页</span>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" msg="{{alert.msg}}" close="closeAlert($index)" ng-show="false"></alert>
+  </div>
+  <script type="text/ng-template" id="addModal.html">
+        <div>
+            <form class="form-horizontal" projectManage="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}项目</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="projectId" />
+                    <table class="table table-striped table-bordered table-hover">
+				<tr>
+                  <td width="10%">项目名称:</td>
+                  <td width="40%">{{projectManageModal.projectName}}
+                  
+                  </td>
+                </tr>
+		        <tr>
+                  <td width="10%">项目GUID :</td>
+                  <td width="40%">{{projectManageModal.projectGuid}}
+                  
+                  </td>
+                </tr>
+                <tr>
+                  <td width="10%">项目code:</td>
+                  <td width="40%">{{projectManageModal.projectCode}}
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td width="10%">城市:</td>
+                  <td width="40%">
+                   <input type="text" name="city"  required ng-model="projectManageModal.city" ng-minlength="3" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.city.$error.required">必填</span>
+                    <span ng-show="myForm.city.$error.minlength">太短</span>
+                    <span ng-show="myForm.city.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="10%">状态 :</td>
+                  <td width="40%">
+                   <label ng-repeat="state in projectStateList" style=" padding-right:10px">
+						<input type="radio" name="state" ng-class="md-check" ng-value="state.id" ng-model="projectManageModal.state"/> {{state.name}}
+					</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="10%">项目类别 :</td>
+                  <td width="40%">
+                  	<label ng-repeat="type in projectTypeList" style=" padding-right:10px">
+						<input type="radio" name="projectType" ng-class="md-check" ng-value="type.id" ng-model="projectManageModal.projectType"/> {{type.name}}
+					</label>
+                  </td>
+                </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(projectId,thisProjectManageNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+  <script type="text/ng-template" id="editModal.html">
+        <div>
+            <form class="form-horizontal" projectManage="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}项目</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="projectId" />
+                    <table class="table table-striped table-bordered table-hover">
+		         <tr>
+                  <td width="10%">项目名称:</td>
+                  <td width="40%">{{projectManageModal.projectName}}
+                  
+                  </td>
+
+                  <td width="10%">项目GUID :</td>
+                  <td width="40%">{{projectManageModal.projectGuid}}
+                  
+                  </td>
+                </tr>
+                <tr>
+                  <td width="10%">项目code:</td>
+                  <td width="40%">{{projectManageModal.projectCode}}
+                  </td>
+ 
+                  <td width="10%">所属城市:</td>
+                  <td width="40%">
+				   {{projectManageModal.city}}
+                  </td>
+                </tr>
+				<tr>
+                  <td width="10%">地市公司:</td>
+                  <td width="40%">  
+				  	  <select ng-model="projectManageModal.companyId" 
+					          ng-options="o.id as o.name for o in cityCompanyList" class="form-control input-xlarge">
+					  </select>
+                  </td>
+
+                  <td width="10%">项目经理岗位:</td>
+                  <td width="40%">
+				      <select ng-model="projectManageModal.pmStationGuid" 
+					          ng-options="o.id as o.levleName for o in projectStationList" class="form-control input-xlarge">
+					  </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="10%">状态 :</td>
+                  <td width="40%">
+                   <label ng-repeat="state in projectStateList" style=" padding-right:10px">
+						<input type="radio" name="state" ng-class="md-check" ng-value="state.id" ng-model="projectManageModal.state"/> {{state.name}}
+					</label>
+                  </td>
+                  <td width="10%">项目类别 :</td>
+                  <td width="40%">
+				   {{projectTypeMap[projectManageModal.projectType]}}
+                  </td>
+                </tr>
+				
+				<tr>
+                  <td width="10%">代理公司:</td>
+                  <td width="90%" colspan="3" class="proxy_company">
+				  <div ng-repeat="company in projectManageModal.proxyCompanyList" class="checkBoxLabel2">
+				    <label >
+					  <input type="checkBox" name="companyId" ng-model="company.checked" ng-value="company.checked"/> 
+					  {{company.name}}
+				    </label>
+				    <div class="work">
+				      岗位:
+				      <select ng-model="company.code" 
+					          ng-options="o.id as o.levleName for o in projectStationList" class=" input-middle">
+					  </select>
+				    </div>
+				  </div>				   
+                  </td>
+                </tr>
+
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(projectId,thisProjectManageNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+</div>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.caseManage.dao.CompanyDao">
+	 
+
+	 <resultMap id="CompanyMap" type="TcasCompany" >
+	    <id column="company_id" property="companyId" jdbcType="BIGINT" />
+		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		<result column="guid" property="guid" jdbcType="VARCHAR" />
+		<result column="company_type" property="companyType" jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="project_code" property="projectCode" jdbcType="VARCHAR" />		
+		<result column="ac_station_guid" property="acStationGuid" jdbcType="VARCHAR" />
+	 </resultMap>
+
+	<select id="getCompanyList" resultMap="CompanyMap" parameterType="java.util.Map">
+		select
+		company_id,
+		company_name,
+		guid,
+		company_type,
+		state,
+		project_code,
+		ac_station_guid,
+		create_time
+		from
+		tcas_company
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             company_name like CONCAT('%','${searchTxt}','%' )
+	             or 
+	             guid  =  #{searchTxt}
+	             or
+	             company_id  =  #{searchTxt}
+	            )  
+	        </if>
+	        and company_type = #{companyType}
+        </where>
+        order by company_id
+	</select>
+
+	<select id="getCityCompanyMap" resultType="LongMap">
+		select
+		company_id id,
+		company_name name
+		from
+		tcas_company
+		where company_type=1
+        order by company_id
+	</select>
+	
+	<select id="getAllCompanyMap" resultType="LongMap">
+		select
+		company_id id,
+		company_name name
+		from
+		tcas_company
+        order by company_id
+	</select>
+	
+	<select id="getCompanyById" resultMap="CompanyMap" parameterType="java.lang.Long">
+		select
+		company_id,
+		company_name,
+		guid,
+		company_type,
+		state,
+		ac_station_guid,
+		project_code,
+		create_time
+		from
+		tcas_company
+		where company_id =  #{companyId}
+    </select>
+
+	<insert id="insert" parameterType="TcasCompany">
+		insert into
+		tcas_company(
+		company_id,
+		company_name,
+		guid,
+		company_type,
+		state,
+		ac_station_guid,
+		project_code,
+		create_time
+		)
+		values
+		(
+		#{companyId},
+		#{companyName},
+		#{guid},
+		#{companyType},
+		#{state},
+		#{acStationGuid},
+		#{projectCode},
+		#{createTime}
+		)
+	</insert>
+
+	
+
+	<update id="update" parameterType="TcasCompany">
+		update tcas_company
+		set
+		company_id = #{companyId},
+		company_name = #{companyName},
+		guid = #{guid},
+		company_type = #{companyType},
+		state = #{state},
+		ac_station_guid = #{acStationGuid},
+		project_code = #{projectCode},
+		create_time = #{createTime}
+		where company_id =
+		#{companyId}
+	</update>
+	
+	<select id="getProjectLevel1Id" resultType="java.lang.Long" parameterType="java.lang.Long">
+		select
+		a.project_code 
+		from
+		tcas_company_project a 
+		join tcas_project b on a.project_code=b.project_code
+		where b.project_type = 1 and a.company_id=#{companyId} 
+		order by a.project_code 
+		limit 1
+	</select>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from tcas_company where company_id =
+		#{companyId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update tcas_company
+		set
+		state = 2
+		where company_id =
+		#{companyId}
+	</update>
+	<update id="delete" parameterType="java.lang.Long">
+		delete from tcas_company
+		where company_id =
+		#{companyId}
+	</update>
+	<update id="deleteCompanyProjectLevel1" parameterType="java.lang.Long">
+		delete a from tcas_company_project a
+        left join tcas_project b on a.project_code=b.project_code
+		where b.project_type = 1
+		and 
+		a.company_id=#{companyId}
+	</update>
+	
+	<insert id="addCompanyProjectLevel1" parameterType="java.util.Map">
+		insert into
+		tcas_company_project(
+		company_id,
+		project_code
+		)
+		values
+		(
+		#{companyId},
+		#{projectCode}
+		)
+	</insert>
+
+	<select id="getCompanyCount" resultType="int">
+		select count(1)
+		from tcas_company
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select company_id from tcas_company
+	</select>
+
+</mapper>

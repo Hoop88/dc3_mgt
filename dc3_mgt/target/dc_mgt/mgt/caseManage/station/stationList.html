@@ -1,0 +1,50 @@
+<div ng-controller="stationListController" ng-init="initializeController()">
+<div class="btn-toolbar">
+  <input type="hidden" name="hidIsReLoad" id="hidIsReLoad" />
+  <div class="btn-group"></div>
+</div>
+<div class="well" style="min-height:450px;">
+  <div class="top_search form-inline">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="form-group">
+          <input type="text" name="title" placeholder="请输入检索内容"
+                   ng-keypress="enter($event)"
+                   id="tree_search" maxlength="100" class="input-xlarge form-control">
+        </div>
+        <a sysUser="button" ng-click="searchTree();" class="btn btn-success"><i class="glyphicon glyphicon-search"></i> 查询</a> </div>
+      <div class="col-md-3 "> </a> </div>
+    </div>
+  </div>
+  <table class="table  table-bordered">
+    <tbody>
+      <tr>
+        <td width="50%"><div id="stationTree" class="demo" style="margin-top:1em; min-height:200px;"></div></td>
+        <td>
+        <div id="stationInfo">
+
+        <table class="table table-striped table-bordered table-hover">
+            <input type="hidden" ng-model="stationGuid" />
+            <tr>
+              <td width="20%">岗位名称:</td>
+              <td width="80%">{{stationModal.stationName}} </td>
+            </tr>
+            <tr>
+              <td width="20%">项目CODE:</td>
+              <td width="80%"> {{stationModal.projectCode}} </td>
+            </tr>
+            <tr>
+              <td width="20%">岗位ID:</td>
+              <td width="80%"> {{stationModal.stationGuid}} </td>
+            </tr>
+            <tr>
+              <td width="20%">父岗位ID:</td>
+              <td width="80%"> {{stationModal.parentGuid}} </td>
+            </tr>
+          </table>
+         </div> 
+          </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

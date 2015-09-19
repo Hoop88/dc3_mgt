@@ -1,0 +1,10 @@
+{
+    "ValidationErrors": {},
+    "TotalPages": 0,
+    "TotalRows": 0,
+    "pageSize": 0,
+    "IsAuthenicated": true,
+    "ReturnStatus": true,
+    "ReturnMessage": ["删除成功！"],
+    "RowNumber": 0
+}

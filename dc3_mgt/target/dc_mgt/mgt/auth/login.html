@@ -1,0 +1,95 @@
+﻿<!-- <div ng-Controller="loginController" ng-init="initializeController()">
+    <div class="row-fluid">
+        <div class="dialog" style="margin-top: 204px; ">
+            <div class="block">
+                <p class="block-heading">
+                    登录</p>
+                <div class="block-body">
+                    <form class="form-horizontal" role="form" style=" height:133px;" name="myForm" novalidate>
+                    <span>
+                        用户名<i class="icon-user"></i></span><span class="alert alert-warning" ng-show="myForm.userName.$error.required" style="margin-bottom: 0px;float:right;
+                        width: 150px; padding-top:0px; padding-bottom:0px;">
+                        帐号不允许为空！
+                    </span>
+                    <input type="text" id="userName" name="userName" ng-model="LoginName" ng-keydown="applyPWD();"
+                        placeholder="请输入用户名" required class="span12" />
+                    <span>
+                        密码<i class="icon-key"></i></span>  <span class="alert alert-warning" ng-show="myForm.pw.$error.required" style="margin-bottom: 0px; float:right;
+                        width: 150px;padding-top:0px; padding-bottom:0px;">
+                        密码不允许为空！
+                    </span>
+                    <input type="password" id="pw" name="pw" ng-model="Password" placeholder="请输入密码" ng-click="applyPWD();"
+                        required class="span12" />
+                    <button type="submit" ng-click="login();" class="btn btn-primary pull-right" style="margin-top: 5px;"
+                        ng-disabled="myForm.$invalid">
+                        <i class="icon-unlock"></i>&nbsp;登录</button>
+                    <label class="alert alert-warning" id="LoginMSG" ng-show="IsError" style="margin-bottom: 0px;
+                        margin-top: 5px; width: 200px;" ng-bind-html="LoginMSG">
+                        cuowu
+                    </label>
+                    <div class="clearfix">
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div ng-Controller="loginController" ng-init="initializeController()">
+    <!-- BEGIN LOGO -->
+    <div class="logo"> <a href="index.html"> <img src="images/logo-default.png" alt=""/> </a> </div>
+    <!-- END LOGO --> 
+    <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+    <div class="menu-toggler sidebar-toggler"> </div>
+    <!-- END SIDEBAR TOGGLER BUTTON --> 
+    <!-- BEGIN LOGIN -->
+    <div class="content"> 
+      <!-- BEGIN LOGIN FORM -->
+      <form class="login-form" role="form" name="myForm" >
+        <div class="form-title">用户登录</div>
+        <div class="alert alert-danger display-hide">
+          <button class="close" data-close="alert"></button>
+          <span> 请输入用户名或密码. </span> </div>
+        <div class="form-group"> 
+          <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+          <label class="control-label visible-ie8 visible-ie9">用户名</label>
+          <div class="input-icon"> <i class="fa fa-user"></i>
+          <input type="text" id="userName" name="userName" ng-model="LoginName" ng-keydown="applyPWD();"
+                        placeholder="请输入用户名" required class="form-control placeholder-no-fix" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label visible-ie8 visible-ie9">密码</label>
+          <div class="input-icon"> <i class="fa fa-lock"></i>
+          <input type="password" id="pw" name="pw" ng-model="Password" placeholder="请输入密码" ng-click="applyPWD();"
+                        required class="form-control placeholder-no-fix keyEnter" />
+          </div>
+        </div>
+        <!--
+        <div class="form-group"> 
+          <label class="control-label visible-ie8 visible-ie9">验证码</label>
+          <div class="input-icon"> <i class="fa fa-user"></i>
+          <input type="text" id="userName" name="userName" ng-model="LoginName" ng-keydown="applyPWD();"
+                        placeholder="请输入用户名" required class="form-control placeholder-no-fix" />
+                        
+                        <img src="" alt="" />
+          </div>
+        </div>
+         --> 
+        <div class="form-actions" style="padding-left:50px;">
+          <label class="checkbox">
+        <input type="checkbox" name="remember" ng-checked="RememberMe" ng-model="RememberMe" />
+        记住我 </label>
+          <button type="submit" class="btn blue pull-right" ng-click="login();" ng-disabled="myForm.$invalid"> 登录 <i class="m-icon-swapright m-icon-white"></i> </button>
+        </div>
+      </form>
+      <!-- END LOGIN FORM --> 
+      
+    </div>
+    <!-- END LOGIN --> 
+    <!-- BEGIN COPYRIGHT -->
+    <div class="copyright"> 2015 &copy;        后台管理系统 </div>
+    <!-- END COPYRIGHT --> 
+</div>

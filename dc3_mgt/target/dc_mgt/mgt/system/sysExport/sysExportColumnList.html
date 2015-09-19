@@ -1,0 +1,194 @@
+<div ng-controller="sysExportColumnListController" ng-init="initializeController()">
+  <div class="btn-toolbar">
+    <input type="hidden" name="hidIsReLoad" id="hidIsReLoad" />
+    <div class="btn-group"></div>
+  </div>
+  <div class="well" style="min-height:450px;">
+    <div class="top_search ">
+      <div class="form-group"> <a sysExportColumn="button" onClick="history.go(-1);" class="btn btn-success"><i class="glyphicon glyphicon-step-backward"></i> 返回</a> <a class="btn purple" sysExportColumn="button" ng-click="addModal();"><i class="glyphicon glyphicon-plus"></i> 添加</a> </div>
+      <div class="form-group">
+        <table class="table table-striped table-bordered ">
+          <tr >
+            <th width="20%" class="text-center">导出编码:</th>
+            <td width="30%"> {{sysExportModal.exportCode}} </td>
+            <th width="20%" class="text-center">导出名称:</th>
+            <td width="30%"> {{sysExportModal.name}} </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <table class="table table-striped table-hover table-bordered">
+      <thead>
+        <tr >
+          <th class="text-center">排序</th>
+          <th class="text-center">字段名</th>
+          <th class="text-center">字段值</th>
+          <th class="text-center">字段类别</th>
+          <th class="text-center">map的key</th>
+          <th class="text-center">时间格式</th>
+          <th class="text-center" width="16%"> 操作 </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="sysExportColumn in SysExportColumns" ng-class="{'tableTrColor':sysExportColumn.IsCurrent==1}" on-finish-render-filters>
+          <td class="text-center"> {{sysExportColumn.orderNum}} </td>
+          <td class="text-center"> {{sysExportColumn.columnName}} </td>
+          <td class="text-center"> {{sysExportColumn.columnValue}} </td>
+          <td class="text-center"> {{sysExportColumnTypeMap[sysExportColumn.columnType]}} </td>
+          <td class="text-center"> {{sysExportColumn.mapKey}} </td>
+          <td class="text-center"> {{sysExportColumn.dateFormat}} </td>
+          <td class="text-center"><button class="btn btn-info btn-xs" type="button" href="#" data-toggle="modal" ng-click="editModal(sysExportColumn.columnId);" title="修改"> <span class="glyphicon glyphicon-edit"></span> 修改 </button>
+            <button class="btn btn-danger btn-xs" type="button" href="#basic" data-toggle="modal" ng-click="deleteOne(sysExportColumn.columnId);"> <span class="glyphicon glyphicon-trash"  title="删除"></span> 删除 </button></td>
+        </tr>
+      </tbody>
+    </table>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" msg="{{alert.msg}}" close="closeAlert($index)" ng-show="false"></alert>
+  </div>
+  <script type="text/ng-template" id="addModal.html">
+        <div>
+            <form class="form-horizontal" sysExportColumn="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}导出配置项</h3>
+                </div>
+                <div class="modal-body">
+			
+			<input type="hidden" ng-model="sysExportColumnModal.exportId" />
+			<input type="hidden" ng-model="sysExportColumnModal.exportCode" />
+			<table class="table table-striped table-bordered table-hover">
+				<tr>
+                  <td width="20%">排序:</td>
+                  <td width="80%">
+                   <input type="text" name="orderNum"  required ng-model="sysExportColumnModal.orderNum"  class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.orderNum.$error.required">必填</span>
+                   </span>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">字段名:</td>
+                  <td width="80%">
+                   <input type="text" name="columnName"  required ng-model="sysExportColumnModal.columnName" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.columnName.$error.required">必填</span>
+                    <span ng-show="myForm.columnName.$error.minlength">太短</span>
+                    <span ng-show="myForm.columnName.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">字段值:</td>
+                  <td width="80%">
+                   <input type="text" name="columnValue"  required ng-model="sysExportColumnModal.columnValue" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.columnValue.$error.required">必填</span>
+                    <span ng-show="myForm.columnValue.$error.minlength">太短</span>
+                    <span ng-show="myForm.columnValue.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">字段类别:</td>
+                  <td width="80%">
+                   <select ng-model="sysExportColumnModal.columnType"  ng-options="o.id as o.name for o in sysExportColumnTypeList">
+									<option value="">请选择</option>
+				   </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">map的key:</td>
+                  <td width="80%">
+                   <input type="text" name="mapKey"  ng-model="sysExportColumnModal.mapKey"  class="input-xlarge">
+                   
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">时间格式:</td>
+                  <td width="80%">
+                   <input type="text" name="dateFormat"  ng-model="sysExportColumnModal.dateFormat"  class="input-xlarge">
+                   
+                  </td>
+                </tr> 
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(columnId,thisSysExportColumnNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+  <script type="text/ng-template" id="editModal.html">
+        <div>
+            <form class="form-horizontal" sysExportColumn="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}导出配置项</h3>
+                </div>
+                <div class="modal-body">
+			<input type="hidden" ng-model="columnId" />
+			<table class="table table-striped table-bordered table-hover">
+			   <tr>
+                  <td width="20%">排序:</td>
+                  <td width="80%">
+                   <input type="text" name="orderNum"  required ng-model="sysExportColumnModal.orderNum"  class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.orderNum.$error.required">必填</span>
+                   </span>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">字段名:</td>
+                  <td width="80%">
+                   <input type="text" name="columnName"  required ng-model="sysExportColumnModal.columnName" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.columnName.$error.required">必填</span>
+                    <span ng-show="myForm.columnName.$error.minlength">太短</span>
+                    <span ng-show="myForm.columnName.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">字段值:</td>
+                  <td width="80%">
+                   <input type="text" name="columnValue"  required ng-model="sysExportColumnModal.columnValue" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.columnValue.$error.required">必填</span>
+                    <span ng-show="myForm.columnValue.$error.minlength">太短</span>
+                    <span ng-show="myForm.columnValue.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">字段类别:</td>
+                  <td width="80%">
+                   <select ng-model="sysExportColumnModal.columnType"  ng-options="o.id as o.name for o in sysExportColumnTypeList">
+									<option value="">请选择</option>
+				   </select>
+                  </td>
+                </tr>
+                 <tr>
+                  <td width="20%">map的key:</td>
+                  <td width="80%">
+                   <input type="text" name="mapKey"  ng-model="sysExportColumnModal.mapKey"  class="input-xlarge">
+                   
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">时间格式:</td>
+                  <td width="80%">
+                   <input type="text" name="dateFormat"  ng-model="sysExportColumnModal.dateFormat"  class="input-xlarge">
+                   
+                  </td>
+                </tr> 
+                
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(columnId,thisSysExportColumnNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+</div>

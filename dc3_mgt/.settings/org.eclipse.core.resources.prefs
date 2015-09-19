@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/main/resources/conf/jdbc.properties=UTF-8
+encoding//src/main/webapp/mgt/system/department/departmentList.html=UTF-8
+encoding//src/main/webapp/mgt/system/role/roleList.html=UTF-8
+encoding//src/main/webapp/mgt/system/sysExport/sysExportColumnList.html=UTF-8
+encoding//src/main/webapp/mgt/system/sysExport/sysExportList.html=UTF-8
+encoding//src/main/webapp/mgt/system/sysParam/sysParamList.html=UTF-8
+encoding//src/main/webapp/mgt/system/sysUser/deps.json=UTF-8
+encoding//src/main/webapp/mgt/system/sysUser/sysUserList.html=UTF-8
+encoding/<project>=UTF-8

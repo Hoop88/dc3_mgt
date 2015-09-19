@@ -1,0 +1,176 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>深讯后台管理</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="深讯后台管理" />
+    <meta name="author" content="RICE" />
+    <script src="scripts/html5shiv.js"></script>
+    <script src="scripts/json2.js"></script>
+    <link href="lib/bootstrap/css/angular-block-ui.css" rel="stylesheet" />
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/uniform.default.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!--编辑器-->
+<link rel="stylesheet" type="text/css" href="css/bootstrap-wysihtml5.css"/>
+<link rel="stylesheet" type="text/css" href="css/summernote.css">
+<!--tree菜单-->
+<link rel="stylesheet" type="text/css" href="css/jstree.min.css">
+<!-- BEGIN THEME STYLES -->
+<link href="css/components.css" rel="stylesheet" type="text/css"/>
+<link href="css/plugins.css" rel="stylesheet" type="text/css"/>
+<link href="css/layout.css" rel="stylesheet" type="text/css"/>
+<link id="style_color" href="css/grey.css" rel="stylesheet" type="text/css"/>
+<link href="css/custom.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="jstree/dist/themes/default/style.min.css" />
+<link rel="stylesheet" href="lib/bootstrap/bootstrap-select/bootstrap-select.min.css" />
+
+<script data-main="main.js?12" src="scripts/require.js"></script>
+
+
+    
+    <link rel="stylesheet" href="scripts/angular-toastr.css" />
+    
+    <style type="text/css">
+        #line-chart {
+            height: 300px;
+            width: 800px;
+            margin: 0px auto;
+            margin-top: 1em;
+        }
+
+        .brand {
+            font-family: georgia, serif;
+        }
+
+            .brand .first {
+                color: #ccc;
+                font-style: italic;
+            }
+
+            .brand .second {
+                color: #fff;
+                font-weight: bold;
+            }
+    </style>
+   
+</head>
+
+
+
+<body class="page-boxed page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed-hide-logo" ng-Controller="indexController" ng-init="initializeController()" style="overflow-y:scroll; ">
+<!-- BEGIN HEADER -->
+
+<div class="page-header navbar navbar-fixed-top"> 
+  <!-- BEGIN HEADER INNER -->
+  <div class="page-header-inner container"> 
+    <!-- BEGIN LOGO -->
+    <div class="page-logo"> <a href="index.html"> <img src="images/logo-default.png" alt="logo" class="logo-default"/> </a>
+      <div class="menu-toggler sidebar-toggler"> 
+        <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header --> 
+      </div>
+    </div>
+    <!-- END LOGO --> 
+    <!-- BEGIN RESPONSIVE MENU TOGGLER --> 
+    <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a> 
+    <!-- END RESPONSIVE MENU TOGGLER --> 
+    <!-- BEGIN PAGE TOP -->
+    <div class="page-top">
+      <div class="pull-left"> <span class="admin_title">时代案场管理后台</span> </div>
+      <!-- BEGIN TOP NAVIGATION MENU -->
+      <div class="top-menu">
+        <ul class="nav navbar-nav pull-right">
+          <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+          <li class="dropdown dropdown-quick-sidebar-toggler hide"> <a href="javascript:;" class="dropdown-toggle"> <i class="icon-logout"></i> </a> </li>
+          <!-- END QUICK SIDEBAR TOGGLER --> 
+          <!-- BEGIN USER LOGIN DROPDOWN -->
+          <li class="dropdown dropdown-user"> <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"> <img alt="" class="img-circle hide1"  ng-src="{{HeaderPic}}" ng-if="HeaderPic"/> <span class="username username-hide-on-mobile" ng-bind="UserName"></span> <i class="fa fa-angle-down"></i> </a>
+            <ul class="dropdown-menu">
+              <li> <a href="javascript:;"> <i class="icon-user"></i>我的信息 </a> </li>
+              <li> <a href="javascript:;"> <i class="icon-envelope-open"></i> 收件箱 <span class="badge badge-danger"> 3 </span> </a> </li>
+              <li> <a href="javascript:;"> <i class="icon-rocket"></i>我的任务 <span class="badge badge-success"> 7 </span> </a> </li>
+              <li class="divider"> </li>
+              <li> <a ui-sref="Logout"> <i class="icon-key"></i> 退出 </a> </li>
+            </ul>
+          </li>
+          <!-- END USER LOGIN DROPDOWN -->
+        </ul>
+      </div>
+      <!-- END TOP NAVIGATION MENU --> 
+    </div>
+    <!-- END PAGE TOP --> 
+  </div>
+  <!-- END HEADER INNER --> 
+</div>
+<!-- END HEADER -->
+<div class="clearfix"> </div>
+<div class="container">
+  <div class="page-container"> 
+    <!-- BEGIN SIDEBAR -->
+    <div class="page-sidebar-wrapper"> 
+      <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing --> 
+      <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+      <div class="page-sidebar navbar-collapse collapse"> 
+        <!-- BEGIN SIDEBAR MENU -->
+        <ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-auto-scroll="true" data-slide-speed="200">
+    
+          
+          <li class="start" ng-class="{active: $state.includes(menuParent.href.split('.')[0])}" ng-repeat="menuParent in menuItems">
+          
+          <a ng-if="menuParent.menuItems.length>0"  href="javascript:;">
+          <i ng-class="menuParent.className"></i><span class="title" ng-bind="menuParent.menuName"></span><span ng-class="{selected: $state.includes(menuParent.href)}"></span></a> 
+          <a ng-if="menuParent.menuItems.length==0"  ui-sref="{{menuParent.href}}" ng-click="setNavigation(menuParent.navigation);">
+          <i ng-class="menuParent.className"></i><span class="title" ng-bind="menuParent.menuName"></span><span ng-class="{selected: $state.includes(menuParent.href)}"></span></a> 
+          
+            <ul class="sub-menu">
+              <li ui-sref-active="active" ng-repeat="menuSub in menuParent.menuItems"> <a ui-sref="{{menuSub.href}}" ng-click="setNavigation(menuSub.navigation);"> <i ng-class="menuSub.className"></i>{{menuSub.menuName}}</a> </li>
+            </ul>
+
+          </li>
+
+
+        </ul>
+        <!-- END SIDEBAR MENU --> 
+      </div>
+    </div>
+    <!-- END SIDEBAR --> 
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+      <div class="page-content"> 
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar page-position">
+          <ul class="page-breadcrumb">
+            <li> <i class="fa fa-home"></i> <a ui-sref="Main">首页</a></li>
+            <li class="active" ng-show="navigation!='' && navigation!='首页'" ng-bind="' > '+navigation"> </li>
+          </ul>
+        </div>
+        <!-- END PAGE HEADER--> 
+        <!-- BEGIN PAGE CONTENT--> 
+        
+        <div data-ui-view></div>
+        
+        <!-- END PAGE CONTENT--> 
+      </div>
+    </div>
+    <!-- END CONTENT --> 
+    <!-- BEGIN QUICK SIDEBAR --> 
+    <!--Cooming Soon...--> 
+    <!-- END QUICK SIDEBAR --> 
+  </div>
+  <!-- BEGIN FOOTER -->
+  <div class="page-footer">
+    <div class="page-footer-inner"> 2015 &copy; 后台管理系统 </div>
+    <div class="scroll-to-top"> <i class="icon-arrow-up"></i> </div>
+  </div>
+  <!-- END FOOTER --> 
+</div>
+</body>
+
+
+</html>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.MenuDao">
+	 
+
+	 <resultMap id="MenuMap" type="SysMenu" >
+	    <id column="menu_id" property="menuId" jdbcType="INTEGER" />
+		<result column="function_id" property="functionId" jdbcType="INTEGER" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="navigation" property="navigation" jdbcType="VARCHAR" />
+		<result column="action" property="action" jdbcType="VARCHAR" />
+		<result column="menu_level" property="menuLevel" jdbcType="INTEGER" />
+		<result column="menu_class" property="menuClass" jdbcType="VARCHAR" />
+		<result column="top_menu" property="topMenu" jdbcType="INTEGER" />
+		<result column="bar_menu" property="barMenu" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+
+	 </resultMap>
+
+	<select id="getMenuList" resultMap="MenuMap" parameterType="java.util.Map">
+		select
+		menu_id,
+		function_id,
+		menu_name,
+		navigation,
+		action,
+		menu_level,
+		menu_class,
+		top_menu,
+		bar_menu,
+		parent_id,
+		sort
+		from
+		sys_menu
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             menu_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by menu_id desc
+	</select>
+
+	<select id="getHaveMenuList" resultMap="MenuMap">
+		select
+		menu_id,
+		function_id,
+		menu_name,
+		navigation,
+		action,
+		menu_level,
+		menu_class,
+		top_menu,
+		bar_menu,
+		parent_id,
+		sort
+		from
+		sys_menu
+		where menu_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.menuId}
+		</foreach>
+	</select>
+
+	<select id="getMenuById" resultMap="MenuMap" parameterType="java.lang.Integer">
+		select
+		menu_id,
+		function_id,
+		menu_name,
+		navigation,
+		action,
+		menu_level,
+		menu_class,
+		top_menu,
+		bar_menu,
+		parent_id,
+		sort
+		from
+		sys_menu
+		where menu_id =  #{menuId}
+    </select>
+
+	<insert id="insert" parameterType="SysMenu">
+		insert into
+		sys_menu(
+		menu_id,
+		function_id,
+		menu_name,
+		navigation,
+		action,
+		menu_level,
+		menu_class,
+		top_menu,
+		bar_menu,
+		parent_id,
+		sort
+		)
+		values
+		(
+		#{menuId},
+		#{functionId},
+		#{menuName},
+		#{navigation},
+		#{action},
+		#{menuLevel},
+		#{menuClass},
+		#{topMenu},
+		#{barMenu},
+		#{parentId},
+		#{sort}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_menu(
+		menu_id,
+		function_id,
+		menu_name,
+		navigation,
+		action,
+		menu_level,
+		menu_class,
+		top_menu,
+		bar_menu,
+		parent_id,
+		sort
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.menuId},
+			#{obj.functionId},
+			#{obj.menuName},
+			#{obj.navigation},
+			#{obj.action},
+			#{obj.menuLevel},
+			#{obj.menuClass},
+			#{obj.topMenu},
+			#{obj.barMenu},
+			#{obj.parentId},
+			#{obj.sort}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysMenu">
+		update sys_menu
+		set
+		menu_id = #{menuId},
+		function_id = #{functionId},
+		menu_name = #{menuName},
+		navigation = #{navigation},
+		action = #{action},
+		menu_level = #{menuLevel},
+		menu_class = #{menuClass},
+		top_menu = #{topMenu},
+		bar_menu = #{barMenu},
+		parent_id = #{parentId},
+		sort = #{sort}
+		where menu_id =
+		#{menuId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_menu
+			set
+			menu_id = #{obj.menuId},
+			function_id = #{obj.functionId},
+			menu_name = #{obj.menuName},
+			navigation = #{obj.navigation},
+			action = #{obj.action},
+			menu_level = #{obj.menuLevel},
+			menu_class = #{obj.menuClass},
+			top_menu = #{obj.topMenu},
+			bar_menu = #{obj.barMenu},
+			parent_id = #{obj.parentId},
+			sort = #{obj.sort}
+			where menu_id =
+			#{obj.menuId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from sys_menu where menu_id =
+		#{menuId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update sys_menu
+		set
+		state = 2
+		where menu_id =
+		#{menuId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from sys_menu
+		where menu_id =
+		#{menuId}
+	</update>
+
+	<select id="getMenuCount" resultType="int">
+		select count(1)
+		from sys_menu
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select menu_id from sys_menu
+	</select>
+
+</mapper>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.api.base.dao.ApiDao">
+	 
+
+	 <resultMap id="ApiMap" type="LogApi" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="req_url" property="reqUrl" jdbcType="VARCHAR" />
+		<result column="int_name" property="intName" jdbcType="VARCHAR" />
+		<result column="req_data" property="reqData" jdbcType="LONGVARCHAR" />
+		<result column="res_data" property="resData" jdbcType="LONGVARCHAR" />
+		<result column="req_content" property="reqContent" jdbcType="LONGVARCHAR" />
+		<result column="res_content" property="resContent" jdbcType="LONGVARCHAR" />
+		<result column="exc_data" property="excData" jdbcType="LONGVARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="imei" property="imei" jdbcType="VARCHAR" />
+		<result column="model_num" property="modelNum" jdbcType="VARCHAR" />
+		<result column="version_num" property="versionNum" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="app_version" property="appVersion" jdbcType="VARCHAR" />
+		<result column="result" property="result" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"  />
+
+	 </resultMap>
+
+	<select id="getApiList" resultMap="ApiMap" parameterType="java.util.Map">
+		select
+		id,
+		user_id,
+		user_name,
+		req_url,
+		int_name,
+		req_data,
+		res_data,
+		req_content,
+		res_content,
+		exc_data,
+		ip,
+		imei,
+		model_num,
+		version_num,
+		app_code,
+		app_version,
+		result,
+		create_time
+		from
+		log_api
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             api_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by id desc
+	</select>
+
+	<select id="getHaveApiList" resultMap="ApiMap">
+		select
+		id,
+		user_id,
+		user_name,
+		req_url,
+		int_name,
+		req_data,
+		res_data,
+		req_content,
+		res_content,
+		exc_data,
+		ip,
+		imei,
+		model_num,
+		version_num,
+		app_code,
+		app_version,
+		result,
+		create_time
+		from
+		log_api
+		where id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</select>
+
+	<select id="getApiById" resultMap="ApiMap" parameterType="java.lang.Integer">
+		select
+		id,
+		user_id,
+		user_name,
+		req_url,
+		int_name,
+		req_data,
+		res_data,
+		req_content,
+		res_content,
+		exc_data,
+		ip,
+		imei,
+		model_num,
+		version_num,
+		app_code,
+		app_version,
+		result,
+		create_time
+		from
+		log_api
+		where id =  #{id}
+    </select>
+
+	<insert id="insert" parameterType="LogApi">
+		insert into
+		log_api(
+		id,
+		user_id,
+		user_name,
+		req_url,
+		int_name,
+		req_data,
+		res_data,
+		req_content,
+		res_content,
+		exc_data,
+		ip,
+		imei,
+		model_num,
+		version_num,
+		app_code,
+		app_version,
+		result,
+		create_time
+		)
+		values
+		(
+		#{id},
+		#{userId},
+		#{userName},
+		#{reqUrl},
+		#{intName},
+		#{reqData},
+		#{resData},
+		#{reqContent},
+		#{resContent},
+		#{excData},
+		#{ip},
+		#{imei},
+		#{modelNum},
+		#{versionNum},
+		#{appCode},
+		#{appVersion},
+		#{result},
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		log_api(
+		id,
+		user_id,
+		user_name,
+		req_url,
+		int_name,
+		req_data,
+		res_data,
+		req_content,
+		res_content,
+		exc_data,
+		ip,
+		imei,
+		model_num,
+		version_num,
+		app_code,
+		app_version,
+		result,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.id},
+			#{obj.userId},
+			#{obj.userName},
+			#{obj.reqUrl},
+			#{obj.intName},
+			#{obj.reqData},
+			#{obj.resData},
+			#{obj.reqContent},
+			#{obj.resContent},
+			#{obj.excData},
+			#{obj.ip},
+			#{obj.imei},
+			#{obj.modelNum},
+			#{obj.versionNum},
+			#{obj.appCode},
+			#{obj.appVersion},
+			#{obj.result},
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="LogApi">
+		update log_api
+		set
+		id = #{id},
+		user_id = #{userId},
+		user_name = #{userName},
+		req_url = #{reqUrl},
+		int_name = #{intName},
+		req_data = #{reqData},
+		res_data = #{resData},
+		req_content = #{reqContent},
+		res_content = #{resContent},
+		exc_data = #{excData},
+		ip = #{ip},
+		imei = #{imei},
+		model_num = #{modelNum},
+		version_num = #{versionNum},
+		app_code = #{appCode},
+		app_version = #{appVersion},
+		result = #{result},
+		create_time = #{createTime}
+		where id =
+		#{id}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update log_api
+			set
+			id = #{obj.id},
+			user_id = #{obj.userId},
+			user_name = #{obj.userName},
+			req_url = #{obj.reqUrl},
+			int_name = #{obj.intName},
+			req_data = #{obj.reqData},
+			res_data = #{obj.resData},
+			req_content = #{obj.reqContent},
+			res_content = #{obj.resContent},
+			exc_data = #{obj.excData},
+			ip = #{obj.ip},
+			imei = #{obj.imei},
+			model_num = #{obj.modelNum},
+			version_num = #{obj.versionNum},
+			app_code = #{obj.appCode},
+			app_version = #{obj.appVersion},
+			result = #{obj.result},
+			create_time = #{obj.createTime}
+			where id =
+			#{obj.id}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from log_api where id =
+		#{id}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update log_api
+		set
+		state = 2
+		where id =
+		#{id}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from log_api
+		where id =
+		#{id}
+	</update>
+
+	<select id="getApiCount" resultType="int">
+		select count(1)
+		from log_api
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select id from log_api
+	</select>
+
+</mapper>

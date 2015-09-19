@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.report.dao.LogLabelDao">
+	 
+
+	 <resultMap id="LogLabelMap" type="LogLabel" >
+	    <id column="label_id" property="labelId" jdbcType="INTEGER" />
+		<result column="label_name" property="labelName" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="parent_name" property="parentName" jdbcType="VARCHAR" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+
+	 </resultMap>
+
+	<select id="getLogLabelList" resultMap="LogLabelMap" parameterType="java.util.Map">
+		select
+		label_id,
+		label_name,
+		parent_id,
+		parent_name,
+		order_num,
+		url
+		from
+		log_label
+		
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             logLabel_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+	        <if test="parentId != null">  
+	            and 
+	            (
+	             parent_id =#{parentId}
+	            )  
+	        </if>
+        </where>
+        order by order_num 
+	</select>
+	
+	
+
+	<select id="getHaveLogLabelList" resultMap="LogLabelMap">
+		select
+		label_id,
+		label_name,
+		parent_id,
+		parent_name,
+		order_num,
+		url
+		from
+		log_label
+		where label_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.labelId}
+		</foreach>
+	</select>
+
+	<select id="getLogLabelById" resultMap="LogLabelMap" parameterType="java.lang.Integer">
+		select
+		label_id,
+		label_name,
+		parent_id,
+		parent_name,
+		order_num,
+		url
+		from
+		log_label
+		where label_id =  #{labelId}
+    </select>
+
+	<insert id="insert" parameterType="LogLabel">
+		insert into
+		log_label(
+		label_id,
+		label_name,
+		parent_id,
+		parent_name,
+		order_num,
+		url
+		)
+		values
+		(
+		#{labelId},
+		#{labelName},
+		#{parentId},
+		#{parentName},
+		#{orderNum},
+		#{url}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		log_label(
+		label_id,
+		label_name,
+		parent_id,
+		parent_name,
+		order_num,
+		url
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.labelId},
+			#{obj.labelName},
+			#{obj.parentId},
+			#{obj.parentName},
+			#{obj.orderNum},
+			#{obj.url}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="LogLabel">
+		update log_label
+		set
+		label_id = #{labelId},
+		label_name = #{labelName},
+		parent_id = #{parentId},
+		parent_name = #{parentName},
+		order_num = #{orderNum},
+		url = #{url}
+		where label_id =
+		#{labelId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update log_label
+			set
+			label_id = #{obj.labelId},
+			label_name = #{obj.labelName},
+			parent_id = #{obj.parentId},
+			parent_name = #{obj.parentName},
+			order_num = #{obj.orderNum},
+			url = #{obj.url}
+			where label_id =
+			#{obj.labelId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from log_label where label_id =
+		#{labelId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update log_label
+		set
+		state = 2
+		where label_id =
+		#{labelId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from log_label
+		where label_id =
+		#{labelId}
+	</update>
+
+	<select id="getLogLabelCount" resultType="int">
+		select count(1)
+		from log_label
+	</select>
+
+	<select id="getLabelList" resultMap="LogLabelMap" parameterType="java.lang.Integer">
+		select * from log_label where parent_id = #{parentId} order by order_num
+	</select>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:task="http://www.springframework.org/schema/task" 
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+ 
+  
+    <!-- 引入jdbc配置文件 -->
+    <context:property-placeholder location="classpath:conf/jdbc.properties"/>
+
+    
+    <!-- 扫描文件（自动注入） -->
+    <!-- <context:component-scan base-package="com.sxit"/> -->
+    
+    <context:component-scan base-package="com.sxit" use-default-filters="false">
+        <context:include-filter type="regex" expression="com.sxit.common.utils.*"/>
+        <!-- <context:include-filter type="regex" expression="com.sxit.mgt.*.controller.*"/> -->
+    	<context:include-filter type="regex" expression="com.sxit.mgt.*.service.*"/>
+    	<context:include-filter type="regex" expression="com.sxit.model.*.*"/>
+	</context:component-scan>
+    
+    <!-- 启用注解任务 -->
+    <task:annotation-driven/>
+    
+    
+</beans>

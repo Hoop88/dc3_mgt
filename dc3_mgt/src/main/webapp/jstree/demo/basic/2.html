@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jstree basic demos</title>
+	<style>
+	html { margin:0; padding:0; font-size:62.5%; }
+	body { max-width:800px; min-width:300px; margin:0 auto; padding:20px 10px; font-size:14px; font-size:1.4em; }
+	h1 { font-size:1.8em; }
+	.demo { overflow:auto; border:1px solid silver; min-height:100px; }
+	</style>
+	<link rel="stylesheet" href="./../../dist/themes/default/style.min.css" />
+</head>
+<body>
+	<h1>HTML demo</h1>
+
+
+	<h1>Inline data demo</h1>
+	<div id="data" class="demo"></div>
+
+
+
+	<script src="./../../dist/jquery-1.9.1.min.js"></script>
+	<script src="./../../dist/jstree.min.js"></script>
+	
+	<script>
+	// html demo
+	// "state" : { "selected" : true }
+	// inline data demo "state" : { "selected" : true } 
+	$('#data').jstree({
+		'core' : {
+			'data' : [
+				{"id":1, "text" : "Root node", "children" : [
+						{ "id":2,"text" : "Child node 1" },
+						{ "id":3,"text" : "Child node 2" }
+				]}
+			]
+		},
+		"plugins" : ["checkbox"]
+	}).bind("loaded.jstree",function(){
+			$("#data").jstree("open_all");
+			$("#data").jstree("check_node",{"id":2});
+			console.log("================");
+			console.log($("#data").jstree("get_checked"));
+			
+	});
+		
+		
+	
+
+	</script>
+</body>
+</html>

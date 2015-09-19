@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.SysExportColumnDao">
+	 
+
+	 <resultMap id="SysExportColumnMap" type="SysExportColumn" >
+	    <id column="column_id" property="columnId" jdbcType="INTEGER" />
+		<result column="export_id" property="exportId" jdbcType="INTEGER" />
+		<result column="export_code" property="exportCode" jdbcType="VARCHAR" />
+		<result column="column_value" property="columnValue" jdbcType="VARCHAR" />
+		<result column="column_name" property="columnName" jdbcType="VARCHAR" />
+		<result column="column_type" property="columnType" jdbcType="INTEGER" />
+		<result column="map_key" property="mapKey" jdbcType="VARCHAR" />
+		<result column="date_format" property="dateFormat" jdbcType="VARCHAR" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+
+	 </resultMap>
+
+	<select id="getSysExportColumnList" resultMap="SysExportColumnMap" parameterType="java.util.Map">
+		select
+		column_id,
+		export_id,
+		export_code,
+		column_value,
+		column_name,
+		column_type,
+		map_key,
+		date_format,
+		order_num
+		from
+		sys_export_column
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             sysExportColumn_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by column_id desc
+	</select>
+
+	<select id="getExportColumnListByExportId" resultMap="SysExportColumnMap" parameterType="java.lang.Integer">
+		select
+		column_id,
+		export_id,
+		export_code,
+		column_value,
+		column_name,
+		column_type,
+		map_key,
+		date_format,
+		order_num
+		from
+		sys_export_column
+		where export_id =  #{exportId}
+		order by order_num
+    </select>
+
+	<select id="getSysExportColumnById" resultMap="SysExportColumnMap" parameterType="java.lang.Integer">
+		select
+		column_id,
+		export_id,
+		export_code,
+		column_value,
+		column_name,
+		column_type,
+		map_key,
+		date_format,
+		order_num
+		from
+		sys_export_column
+		where column_id =  #{columnId}
+    </select>
+
+	<insert id="insert" parameterType="SysExportColumn">
+		insert into
+		sys_export_column(
+		column_id,
+		export_id,
+		export_code,
+		column_value,
+		column_name,
+		column_type,
+		map_key,
+		date_format,
+		order_num
+		)
+		values
+		(
+		#{columnId},
+		#{exportId},
+		#{exportCode},
+		#{columnValue},
+		#{columnName},
+		#{columnType},
+		#{mapKey},
+		#{dateFormat},
+		#{orderNum}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_export_column(
+		column_id,
+		export_id,
+		export_code,
+		column_value,
+		column_name,
+		column_type,
+		map_key,
+		date_format,
+		order_num
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.columnId},
+			#{obj.exportId},
+			#{obj.exportCode},
+			#{obj.columnValue},
+			#{obj.columnName},
+			#{obj.columnType},
+			#{obj.mapKey},
+			#{obj.dateFormat},
+			#{obj.orderNum}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysExportColumn">
+		update sys_export_column
+		set
+		column_id = #{columnId},
+		export_id = #{exportId},
+		export_code = #{exportCode},
+		column_value = #{columnValue},
+		column_name = #{columnName},
+		column_type = #{columnType},
+		map_key = #{mapKey},
+		date_format = #{dateFormat},
+		order_num = #{orderNum}
+		where column_id =
+		#{columnId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_export_column
+			set
+			column_id = #{obj.columnId},
+			export_id = #{obj.exportId},
+			export_code = #{obj.exportCode},
+			column_value = #{obj.columnValue},
+			column_name = #{obj.columnName},
+			column_type = #{obj.columnType},
+			map_key = #{obj.mapKey},
+			date_format = #{obj.dateFormat},
+			order_num = #{obj.orderNum}
+			where column_id =
+			#{obj.columnId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from sys_export_column where column_id =
+		#{columnId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update sys_export_column
+		set
+		state = 2
+		where column_id =
+		#{columnId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from sys_export_column
+		where column_id =
+		#{columnId}
+	</update>
+
+	<select id="getSysExportColumnCount" resultType="int">
+		select count(1)
+		from sys_export_column
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select column_id from sys_export_column
+	</select>
+
+</mapper>

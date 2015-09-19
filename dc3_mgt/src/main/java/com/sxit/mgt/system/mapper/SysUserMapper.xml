@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.SysUserDao">
+
+
+	<resultMap id="SysUserMap" type="SysUser">
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="mail" property="mail" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="post" property="post" jdbcType="VARCHAR" />
+		<result column="dep_id" property="depId" jdbcType="INTEGER" />
+		<result column="dep_name" property="depName" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="RoleMap" type="SysRole">
+		<id column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="role_type" property="roleType" jdbcType="INTEGER" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="role_flag" property="roleFlag" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="getSysUserList" resultMap="SysUserMap"
+		parameterType="java.util.Map">
+		select
+		user_id,
+		user_name,
+		name,
+		mobile,
+		logo,
+		mail,
+		remark,
+		post,
+		dep_id,
+		dep_name,
+		state,
+		create_time,
+		modify_time,
+		user_type
+		from
+		sys_user
+		<where>
+			<if test="searchTxt != null">
+				and
+				(
+				user_name like CONCAT('%','${searchTxt}','%' )
+				)
+			</if>
+			<if test="depId != null and depId > 1 ">
+				and
+				(
+				dep_id = #{depId}
+				)
+			</if>
+			and user_type != 5
+		</where>
+		order by user_id desc
+	</select>
+
+	<select id="getRoleList" resultMap="RoleMap" parameterType="java.util.Map">
+		select
+		role_id,
+		role_name,
+		role_type,
+		description,
+		role_flag,
+		create_time
+		from
+		sys_role
+		where role_type=1
+		order by role_id
+	</select>
+
+	<select id="getRoleCheckboxList" resultType="CheckBoxVo"
+		parameterType="java.util.Map">
+		select
+		role_id as id,
+		role_name as name
+		from
+		sys_role
+		where
+		role_type=1
+		order by role_id
+	</select>
+
+
+	<select id="getSysUserById" resultMap="SysUserMap"
+		parameterType="java.lang.Integer">
+		select
+		user_id,
+		user_name,
+		name,
+		mobile,
+		logo,
+		mail,
+		remark,
+		post,
+		dep_id,
+		dep_name,
+		state,
+		create_time,
+		modify_time,
+		user_type
+		from
+		sys_user
+		where user_id = #{userId}
+	</select>
+
+	<select id="getRoleListByUserId" resultMap="RoleMap"
+		parameterType="java.lang.Integer">
+		select
+		a.role_id,
+		a.role_name,
+		a.role_type,
+		a.description,
+		a.role_flag,
+		a.create_time
+		from
+		sys_role a
+		join sys_user_role b on a.role_id =b.role_id
+		where a.role_type=1 and b.user_id = #{userId}
+	</select>
+
+	<select id="getRoleIdListByUserId" resultType="Integer"
+		parameterType="java.lang.Integer">
+		select
+		role_id
+		from
+		sys_user_role
+		where user_id = #{userId}
+	</select>
+
+	<insert id="insert" parameterType="SysUser">
+		insert into
+		sys_user(
+		user_id,
+		user_name,
+		password,
+		name,
+		mobile,
+		logo,
+		mail,
+		remark,
+		post,
+		dep_id,
+		dep_name,
+		state,
+		create_time,
+		modify_time,
+		user_type
+		)
+		values
+		(
+		#{userId},
+		#{userName},
+		#{password},
+		#{name},
+		#{mobile},
+		#{logo},
+		#{mail},
+		#{remark},
+		#{post},
+		#{depId},
+		#{depName},
+		#{state},
+		#{createTime},
+		#{modifyTime},
+		#{userType}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_user(
+		user_id,
+		user_name,
+		password,
+		name,
+		mobile,
+		logo,
+		mail,
+		remark,
+		post,
+		dep_id,
+		dep_name,
+		state,
+		create_time,
+		modify_time,
+		user_type
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.userId},
+			#{obj.userName},
+			#{obj.password},
+			#{obj.name},
+			#{obj.mobile},
+			#{obj.logo},
+			#{obj.mail},
+			#{obj.remark},
+			#{obj.post},
+			#{obj.depId},
+			#{obj.depName},
+			#{obj.state},
+			#{obj.createTime},
+			#{obj.modifyTime},
+			#{obj.userType}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysUser">
+		update sys_user
+		set
+		user_id = #{userId},
+		user_name = #{userName},
+		<if test="password != null">
+			password = #{password},
+		</if>
+		name = #{name},
+		mobile = #{mobile},
+		logo = #{logo},
+		mail = #{mail},
+		remark = #{remark},
+		post = #{post},
+		dep_id = #{depId},
+		dep_name =
+		#{depName},
+		state = #{state},
+		create_time = #{createTime},
+		modify_time =
+		#{modifyTime},
+		user_type = #{userType}
+		where user_id =
+		#{userId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_user
+			set
+			user_id = #{obj.userId},
+			user_name =
+			#{obj.userName},
+			password = #{obj.password},
+			name = #{obj.name},
+			mobile
+			= #{obj.mobile},
+			logo = #{obj.logo},
+			mail = #{obj.mail},
+			remark =
+			#{obj.remark},
+			post = #{obj.post},
+			dep_id = #{obj.depId},
+			dep_name =
+			#{obj.depName},
+			state = #{obj.state},
+			create_time = #{obj.createTime},
+			modify_time = #{obj.modifyTime},
+			user_type = #{obj.userType}
+			where
+			user_id =
+			#{obj.userId}
+		</foreach>
+	</update>
+
+
+	<insert id="addUserRole" parameterType="java.util.Map">
+		insert into
+		sys_user_role(
+		user_id,
+		role_id
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{userId},
+			#{obj}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="deleteUserRole" parameterType="java.util.Map">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			delete from sys_user_role where user_id =#{userId} and
+			role_id=#{obj}
+		</foreach>
+	</insert>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from sys_user where user_id =
+		#{userId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update sys_user
+		set
+		state = 2
+		where user_id =
+		#{userId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from sys_user
+		where
+		user_id =
+		#{userId}
+	</update>
+
+	<select id="getSysUserCount" resultType="int">
+		select count(1)
+		from
+		sys_user
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select user_id from sys_user
+	</select>
+
+</mapper>

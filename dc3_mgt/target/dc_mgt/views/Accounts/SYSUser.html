@@ -1,0 +1,142 @@
+﻿<div ng-Controller="SYSUserController" ng-init="initializeController()">
+    <div class="well" >
+        
+        <div class="top_search form-inline">
+            <div class="form-group"><input type="text" name="title" placeholder="请输入检索关键字:'登录名' 或'姓名'" ng-model="searchText" maxlength="100" class="input-xlarge form-control"></div>
+            <a role="button" ng-click="getUserInfos('search');" class="btn btn-success"><i class="glyphicon glyphicon-search"></i> 查询</a>
+            <a href="#" class="btn purple" role="button" ng-click="addLineItemModal();"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+        </div>
+        
+        
+        <table id="tbUserInfos" class="table table-striped table-bordered table-hover" style="line-height:10px;">
+            <thead>
+                <tr>
+                    <th style="text-align:center" width="19%">
+                        登录名
+                    </th>
+                    <th style="text-align:center" width="19%">
+                        姓名
+                    </th>
+                    <th style="text-align:center" width="19%">
+                        所属角色
+                    </th>
+                    <th style="text-align:center" width="19%">
+                        备注
+                    </th>
+                    <th style="width:130px;text-align:center" width="24%">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="userInfo in UserInfos" on-finish-render-filters>
+                    <td style="text-align:center">
+                        {{userInfo.UserID}}
+                    </td>
+                    <td style="text-align:center">
+                        {{userInfo.Name}}
+                    </td>
+                    <td style="text-align:center">
+                        {{userInfo.RoleName}}
+                    </td>
+                    <td style="text-align:center">
+                        {{userInfo.Remark}}
+                    </td>
+                    <td style="text-align:center">
+                      
+
+                        <button class="btn btn-info btn-xs" type="button" href="#" data-toggle="modal" ng-click="editLineItemModal($index);" title="修改"> <span class="glyphicon glyphicon-edit"></span> 修改 </button>
+
+                        <button class="btn btn-danger btn-xs" type="button" href="#basic" data-toggle="modal" ng-click="deleteLineItem($index);"> <span class="glyphicon glyphicon-trash"  title="删除"></span> 删除 </button>
+
+
+
+</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <pagination boundary-links="true" total-items="TotalRows" items-per-page="pageSize" style="display:block"
+                    ng-change="pageChanged()" ng-model="currentPage" class="pagination-sm"
+                    previous-text="上一页" next-text="下一页" first-text="首页" last-text="末页" style="margin: 0; display: block;"></pagination>
+        <span class="pagination_span">共{{TotalRows}}条,每页{{pageSize}}条,第{{currentPage}}页</span>
+
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" msg="{{alert.msg}}" close="closeAlert($index)" ng-show="false"></alert>
+
+    </div>
+    <script type="text/ng-template" id="addLineItemModal.html" ng-Controller="SYSUserController">
+        <div>
+            <form class="form-horizontal" role="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}人员信息</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="ID" />
+                    <table class="table table-striped table-bordered table-hover">
+                        <tr>
+                            <td>所属角色:</td>
+                            <td>
+                                <select name="RoleName" id="RoleName" ng-disabled="thisUserIDToEdit=='admin'" ng-show="CurUserID=='admin'" ng-options="r.ID as r.RoleName for r in RoleMenus" required ng-model="thisRoleIDToEdit">
+                                    <option value="" checked>请选择</option>
+                                </select>
+                                <select name="RoleName1" id="RoleName1" ng-disabled="true" ng-show="CurUserID!='admin'" ng-options="r.ID as r.RoleName for r in RoleMenus" required ng-model="thisRoleIDToEdit">
+                                    <option value="" checked>请选择</option>
+                                </select><span style="color:red">
+                                    <span style="color:red">
+                                        <span ng-show="myForm.RoleName.$error.required">角色必填。</span>
+                                    </span>
+</td>
+                        </tr>
+                        <tr>
+                            <td>登录名:</td>
+                            <td>
+                                <input type="text" name="UserID" ng-disabled="HeaderText!='新增'" placeholder="请输入登录名（建立后不可修改）" required ng-model="thisUserIDToEdit" ng-minlength="2" ng-maxlength="50">
+                                <span style="color:red">
+                                    <span ng-show="myForm.UserID.$error.required">登录名必填。</span>
+                                    <span ng-show="myForm.UserID.$error.minlength">登录名太短。</span>
+                                    <span ng-show="myForm.UserID.$error.maxlength">登录名太长。</span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>姓名:</td>
+                            <td>
+                                <input type="text" name="Name" placeholder="请输入姓名" required ng-model="thisNameToEdit" ng-minlength="2" ng-maxlength="50">
+                                <span style="color:red">
+                                    <span ng-show="myForm.Name.$error.required">姓名必填。</span>
+                                    <span ng-show="myForm.Name.$error.minlength">姓名太短。</span>
+                                    <span ng-show="myForm.Name.$error.maxlength">姓名太长。</span>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>密码：</td>
+                            <td>
+                                <input type="password" name="Password" id="Password" placeholder="请输入密码" required maxlength="200" ng-model="thisPasswordToEdit">
+                                <span style="color:red"> <span ng-show="myForm.Password.$error.required">密码必填。</span></span>
+                            </td>
+                        </tr>
+                        <tr ng-show="thisUserIDToEdit=='admin'">
+                            <td>绕行密码:</td>
+                            <td>
+                                <input type="password" name="SuperPassword" id="SuperPassword" placeholder="请输入绕行密码" ng-model="thisSuperPasswordToEdit">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>备注：</td>
+                            <td>
+                                <textarea id="txtRemark" rows="3" class="input-xlarge" ng-model="thisRemarkToEdit"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(ID, thisRoleIDToEdit,thisUserIDToEdit,thisNameToEdit, thisRemarkToEdit, thisPasswordToEdit, thisSuperPasswordToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script>
+</div>

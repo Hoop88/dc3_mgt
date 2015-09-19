@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.report.dao.LogLabelHourDao">
+
+
+	<resultMap id="LogLabelHourMap" type="LogLabelHour">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="year" property="year" jdbcType="VARCHAR" />
+		<result column="month" property="month" jdbcType="VARCHAR" />
+		<result column="day" property="day" jdbcType="VARCHAR" />
+		<result column="hour" property="hour" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="parent_name" property="parentName" jdbcType="VARCHAR" />
+		<result column="label_id" property="labelId" jdbcType="INTEGER" />
+		<result column="label_name" property="labelName" jdbcType="VARCHAR" />
+		<result column="req_nums" property="reqNums" jdbcType="BIGINT" />
+		<result column="user_nums" property="userNums" jdbcType="BIGINT" />
+
+	</resultMap>
+
+	<select id="getLogLabelHourList" resultMap="LogLabelHourMap"
+		parameterType="java.util.Map">
+		select
+		id,
+		year,
+		month,
+		day,
+		hour,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		from
+		log_label_hour
+		<where>
+			<if test="searchTxt != null">
+				and
+				(
+				logLabelHour_name like CONCAT('%','${searchTxt}','%' )
+				)
+			</if>
+			<if test="parentId != null">
+				and
+				(
+				parent_id =#{parentId}
+				)
+			</if>
+			<if test="labelId != null">
+				and
+				(
+				label_id =#{labelId}
+				)
+			</if>
+			<if test="year1 != null">
+				and
+				(
+				year &gt;= ${year1}
+				)
+			</if>
+			<if test="month1 != null">
+				and
+				(
+				month &gt;= ${month1}
+				)
+			</if>
+			<if test="day1 != null">
+				and
+				(
+				day &gt;= ${day1}
+				)
+			</if>
+			<if test="year2 != null">
+				and
+				(
+				year &lt;= ${year2}
+				)
+			</if>
+			<if test="month2 != null">
+				and
+				(
+				month &lt;= ${month2}
+				)
+			</if>
+			<if test="day2 != null">
+				and
+				(
+				day &lt;= ${day2}
+				)
+			</if>
+		</where>
+		order by id desc
+	</select>
+
+	<select id="getHaveLogLabelHourList" resultMap="LogLabelHourMap">
+		select
+		id,
+		year,
+		month,
+		day,
+		hour,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		from
+		log_label_hour
+		where id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</select>
+
+	<select id="getLogLabelHourById" resultMap="LogLabelHourMap"
+		parameterType="java.lang.String">
+		select
+		id,
+		year,
+		month,
+		day,
+		hour,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		from
+		log_label_hour
+		where id =
+		#{id}
+	</select>
+
+	<insert id="insert" parameterType="LogLabelHour">
+		insert into
+		log_label_hour(
+		id,
+		year,
+		month,
+		day,
+		hour,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		)
+		values
+		(
+		#{id},
+		#{year},
+		#{month},
+		#{day},
+		#{hour},
+		#{parentId},
+		#{parentName},
+		#{labelId},
+		#{labelName},
+		#{reqNums},
+		#{userNums}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		log_label_hour(
+		id,
+		year,
+		month,
+		day,
+		hour,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.id},
+			#{obj.year},
+			#{obj.month},
+			#{obj.day},
+			#{obj.hour},
+			#{obj.parentId},
+			#{obj.parentName},
+			#{obj.labelId},
+			#{obj.labelName},
+			#{obj.reqNums},
+			#{obj.userNums}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="LogLabelHour">
+		update log_label_hour
+		set
+		id =
+		#{id},
+		year = #{year},
+		month = #{month},
+		day = #{day},
+		hour = #{hour},
+		parent_id = #{parentId},
+		parent_name = #{parentName},
+		label_id =
+		#{labelId},
+		label_name = #{labelName},
+		req_nums = #{reqNums},
+		user_nums =
+		#{userNums}
+		where id =
+		#{id}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update log_label_hour
+			set
+			id = #{obj.id},
+			year = #{obj.year},
+			month =
+			#{obj.month},
+			day = #{obj.day},
+			hour = #{obj.hour},
+			parent_id =
+			#{obj.parentId},
+			parent_name = #{obj.parentName},
+			label_id =
+			#{obj.labelId},
+			label_name = #{obj.labelName},
+			req_nums =
+			#{obj.reqNums},
+			user_nums = #{obj.userNums}
+			where id =
+			#{obj.id}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.String">
+		select
+		count(*) from log_label_hour where id =
+		#{id}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.String">
+		update log_label_hour
+		set
+		state = 2
+		where id =
+		#{id}
+	</update>
+	<update id="delete" parameterType="java.lang.String">
+		delete from log_label_hour
+		where id =
+		#{id}
+	</update>
+
+	<select id="getLogLabelHourCount" resultType="int">
+		select count(1)
+		from log_label_hour
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select id from log_label_hour
+	</select>
+
+</mapper>

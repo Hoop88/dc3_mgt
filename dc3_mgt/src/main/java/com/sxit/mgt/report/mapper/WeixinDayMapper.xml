@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.report.dao.WeixinDayDao">
+
+
+	<resultMap id="WeixinDayMap" type="WzMemberDayStatic">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="day" property="day" jdbcType="VARCHAR" />
+		<result column="newsubscribe" property="newsubscribe" jdbcType="INTEGER" />
+		<result column="unsubscribe" property="unsubscribe" jdbcType="INTEGER" />
+		<result column="subscribe" property="subscribe" jdbcType="INTEGER" />
+		<result column="countsubscribe" property="countsubscribe"
+			jdbcType="INTEGER" />
+		<result column="newadd" property="newadd" jdbcType="INTEGER" />
+		<result column="countadd" property="countadd" jdbcType="INTEGER" />
+		<result column="oldbind" property="oldbind" jdbcType="INTEGER" />
+		<result column="countoldbind" property="countoldbind" jdbcType="INTEGER" />
+		<result column="countbind" property="countbind" jdbcType="INTEGER" />
+		<result column="weixinmember" property="weixinmember" jdbcType="INTEGER" />
+		<result column="accountid" property="accountid" jdbcType="BIGINT" />
+
+	</resultMap>
+
+	<select id="getWeixinDayList" resultMap="WeixinDayMap"
+		parameterType="java.util.Map">
+		select
+		id,
+		day,
+		newsubscribe,
+		unsubscribe,
+		subscribe,
+		countsubscribe,
+		newadd,
+		countadd,
+		oldbind,
+		countoldbind,
+		countbind,
+		weixinmember,
+		accountid
+		from
+		wz_member_day_static
+		<where>
+			<if test="beginDate != null and beginDate != '' ">
+				<![CDATA[ and day >= #{beginDate} ]]>
+			</if>
+			<if test="endDate != null and endDate != '' ">
+				<![CDATA[ and day <= #{endDate} ]]>
+			</if>
+		</where>
+		order by id desc
+	</select>
+
+	<select id="getLastDaySum" resultMap="WeixinDayMap"
+		parameterType="java.lang.Integer">
+		select * from wz_member_day_static where accountId=#{accountId} order by id
+		desc limit 0,1
+	</select>
+
+</mapper>

@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.api.customer.dao.CustomerMergeDao">
+	 
+	 <resultMap id="CustomerMergeMap" type="CstCustomer" >
+	    <id column="cstguid" property="cstguid" jdbcType="BIGINT" />
+		<result column="cstname" property="cstname" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="TINYINT" />
+		<result column="birthdate" property="birthdate"  jdbcType="TIMESTAMP"  />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="csttype" property="csttype" jdbcType="TINYINT" />
+		<result column="cardtype" property="cardtype" jdbcType="TINYINT" />
+		<result column="cardid" property="cardid" jdbcType="VARCHAR" />
+		<result column="mobiletel" property="mobiletel" jdbcType="VARCHAR" />
+		<result column="officetel" property="officetel" jdbcType="VARCHAR" />
+		<result column="hometel" property="hometel" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="postcode" property="postcode" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="regional" property="regional" jdbcType="VARCHAR" />
+		<result column="road" property="road" jdbcType="VARCHAR" />
+		<result column="nationality" property="nationality" jdbcType="VARCHAR" />
+		<result column="nativeplace" property="nativeplace" jdbcType="VARCHAR" />
+		<result column="srctype" property="srctype" jdbcType="VARCHAR" />
+		<result column="lastmodifytime" property="lastmodifytime"  jdbcType="TIMESTAMP"  />
+		<result column="origuid" property="origuid" jdbcType="VARCHAR" />
+		<result column="creditevaluate" property="creditevaluate" jdbcType="VARCHAR" />
+		<result column="cstcode" property="cstcode" jdbcType="VARCHAR" />
+		<result column="company" property="company" jdbcType="VARCHAR" />
+		<result column="position" property="position" jdbcType="VARCHAR" />
+		<result column="incoming" property="incoming" jdbcType="FLOAT" />
+		<result column="workaddr" property="workaddr" jdbcType="VARCHAR" />
+		<result column="companytel" property="companytel" jdbcType="VARCHAR" />
+		<result column="race" property="race" jdbcType="VARCHAR" />
+		<result column="religion" property="religion" jdbcType="VARCHAR" />
+		<result column="political" property="political" jdbcType="VARCHAR" />
+		<result column="ismerried" property="ismerried" jdbcType="TINYINT" />
+		<result column="lasttouchtime" property="lasttouchtime"  jdbcType="TIMESTAMP"  />
+		<result column="recenttouch" property="recenttouch" jdbcType="LONGVARCHAR" />
+		<result column="lastassigntime" property="lastassigntime"  jdbcType="TIMESTAMP"  />
+		<result column="recentassign" property="recentassign" jdbcType="LONGVARCHAR" />
+		<result column="lastappointtime" property="lastappointtime"  jdbcType="TIMESTAMP"  />
+		<result column="recentappoint" property="recentappoint" jdbcType="LONGVARCHAR" />
+		<result column="cognichannel" property="cognichannel" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="memguid" property="memguid" jdbcType="BIGINT" />
+		<result column="staffguid" property="staffguid" jdbcType="VARCHAR" />
+		<result column="ownerguid" property="ownerguid" jdbcType="VARCHAR" />
+		<result column="createtime" property="createtime"  jdbcType="TIMESTAMP"  />
+		<result column="cardid15" property="cardid15" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="TINYINT" />
+		<result column="conflict" property="conflict" jdbcType="INTEGER" />
+		<result column="contact" property="contact" jdbcType="LONGVARCHAR" />
+		<result column="soutype" property="soutype" jdbcType="TINYINT" />
+		<result column="oldcstguidlist" property="oldcstguidlist" jdbcType="VARCHAR" />
+		<result column="newcstguid" property="newcstguid" jdbcType="VARCHAR" />
+	 </resultMap>
+	 
+	 <resultMap id="CstAuthMap" type="CstAuth" >
+	    <id column="contactid" property="contactid" jdbcType="BIGINT" />
+		<result column="cstguid" property="cstguid" jdbcType="BIGINT" />
+		<result column="mobiletel" property="mobiletel" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="wxopenid" property="wxopenid" jdbcType="VARCHAR" />
+		<result column="wxunionid" property="wxunionid" jdbcType="VARCHAR" />
+		<result column="passwd" property="passwd" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="lastupdatetime" property="lastupdatetime"  jdbcType="TIMESTAMP"  />
+		<result column="accountid" property="accountid" jdbcType="VARCHAR" />
+	 </resultMap>
+
+	<resultMap id="CstMemberMap" type="CstMember" >
+	    <id column="memguid" property="memguid" jdbcType="BIGINT" />
+		<result column="orimemguid" property="orimemguid" jdbcType="VARCHAR" />
+		<result column="cstguid" property="cstguid" jdbcType="BIGINT" />
+		<result column="oricstguid" property="oricstguid" jdbcType="VARCHAR" />
+		<result column="buguid" property="buguid" jdbcType="VARCHAR" />
+		<result column="memcode" property="memcode" jdbcType="VARCHAR" />
+		<result column="logpwd" property="logpwd" jdbcType="VARCHAR" />
+		<result column="memstation" property="memstation" jdbcType="VARCHAR" />
+		<result column="specialtype" property="specialtype" jdbcType="VARCHAR" />
+		<result column="joinpath" property="joinpath" jdbcType="VARCHAR" />
+		<result column="joindate" property="joindate"  jdbcType="TIMESTAMP"  />
+		<result column="issendjoinnote" property="issendjoinnote" jdbcType="TINYINT" />
+		<result column="ljpoint" property="ljpoint" jdbcType="FLOAT" />
+		<result column="applydate" property="applydate"  jdbcType="TIMESTAMP"  />
+		<result column="shr" property="shr" jdbcType="VARCHAR" />
+		<result column="shdate" property="shdate"  jdbcType="TIMESTAMP"  />
+		<result column="ljsjpoint" property="ljsjpoint" jdbcType="FLOAT" />
+		<result column="cardstatus" property="cardstatus" jdbcType="VARCHAR" />
+		<result column="makecardreason" property="makecardreason" jdbcType="VARCHAR" />
+		<result column="postcarddate" property="postcarddate"  jdbcType="TIMESTAMP"  />
+		<result column="tjr" property="tjr" jdbcType="VARCHAR" />
+		<result column="tjrmemcode" property="tjrmemcode" jdbcType="VARCHAR" />
+		<result column="tjrrelation" property="tjrrelation" jdbcType="VARCHAR" />
+		<result column="tjremark" property="tjremark" jdbcType="VARCHAR" />
+		<result column="projname" property="projname" jdbcType="VARCHAR" />
+		<result column="xckid" property="xckid" jdbcType="VARCHAR" />
+		<result column="xckpwd" property="xckpwd" jdbcType="VARCHAR" />
+		<result column="saler" property="saler" jdbcType="VARCHAR" />
+		<result column="getmemlevelway" property="getmemlevelway" jdbcType="VARCHAR" />
+		<result column="holdlevelbegindate" property="holdlevelbegindate"  jdbcType="TIMESTAMP"  />
+		<result column="holdlevelenddate" property="holdlevelenddate"  jdbcType="TIMESTAMP"  />
+		<result column="oldmemcode" property="oldmemcode" jdbcType="VARCHAR" />
+		<result column="makecarddate" property="makecarddate"  jdbcType="TIMESTAMP"  />
+		<result column="memlevel" property="memlevel" jdbcType="VARCHAR" />
+		<result column="maxmemlevel" property="maxmemlevel" jdbcType="VARCHAR" />
+		<result column="memstatus" property="memstatus" jdbcType="INTEGER" />
+		<result column="statusdate" property="statusdate"  jdbcType="TIMESTAMP"  />
+		<result column="statusreason" property="statusreason" jdbcType="VARCHAR" />
+		<result column="statushr" property="statushr" jdbcType="VARCHAR" />
+		<result column="oldstatus" property="oldstatus" jdbcType="VARCHAR" />
+		<result column="tellist" property="tellist" jdbcType="VARCHAR" />
+		<result column="accountid" property="accountid" jdbcType="VARCHAR" />
+		<result column="bind_date" property="bindDate"  jdbcType="TIMESTAMP"  />
+	 </resultMap>
+
+	<select id="getCstAuthByCstguid" resultMap="CstAuthMap" parameterType="java.lang.Long">
+		select
+		contactid,
+		cstguid,
+		mobiletel,
+		email,
+		wxopenid,
+		wxunionid,
+		passwd,
+		status,
+		lastupdatetime,
+		accountid
+		from
+		cst_auth
+		where cstguid =  #{cstguid}
+    </select>
+
+
+	<select id="getCustomerList" resultMap="CustomerMergeMap">
+		select
+		cstguid,
+		cstname,
+		gender,
+		birthdate,
+		language,
+		csttype,
+		cardtype,
+		cardid,
+		mobiletel,
+		officetel,
+		hometel,
+		fax,
+		email,
+		postcode,
+		address,
+		country,
+		province,
+		city,
+		regional,
+		road,
+		nationality,
+		nativeplace,
+		srctype,
+		lastmodifytime,
+		origuid,
+		creditevaluate,
+		cstcode,
+		company,
+		position,
+		incoming,
+		workaddr,
+		companytel,
+		race,
+		religion,
+		political,
+		ismerried,
+		lasttouchtime,
+		recenttouch,
+		lastassigntime,
+		recentassign,
+		lastappointtime,
+		recentappoint,
+		cognichannel,
+		status,
+		memguid,
+		staffguid,
+		ownerguid,
+		createtime,
+		cardid15,
+		level,
+		conflict,
+		contact,
+		soutype,
+		oldcstguidlist,
+		newcstguid
+		from
+		cst_customer
+		where cstguid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getCustomerMergeById" resultMap="CustomerMergeMap" parameterType="java.lang.Long">
+		select
+		cstguid,
+		cstname,
+		gender,
+		birthdate,
+		language,
+		csttype,
+		cardtype,
+		cardid,
+		mobiletel,
+		officetel,
+		hometel,
+		fax,
+		email,
+		postcode,
+		address,
+		country,
+		province,
+		city,
+		regional,
+		road,
+		nationality,
+		nativeplace,
+		srctype,
+		lastmodifytime,
+		origuid,
+		creditevaluate,
+		cstcode,
+		company,
+		position,
+		incoming,
+		workaddr,
+		companytel,
+		race,
+		religion,
+		political,
+		ismerried,
+		lasttouchtime,
+		recenttouch,
+		lastassigntime,
+		recentassign,
+		lastappointtime,
+		recentappoint,
+		cognichannel,
+		status,
+		memguid,
+		staffguid,
+		ownerguid,
+		createtime,
+		cardid15,
+		level,
+		conflict,
+		contact,
+		soutype,
+		oldcstguidlist,
+		newcstguid
+		from
+		cst_customer
+		where cstguid =  #{cstguid}
+    </select>
+    
+    
+    <select id="getCustomerByGuid" resultMap="CustomerMergeMap" parameterType="java.lang.String">
+		select
+		cstguid,
+		cstname,
+		gender,
+		birthdate,
+		language,
+		csttype,
+		cardtype,
+		cardid,
+		mobiletel,
+		officetel,
+		hometel,
+		fax,
+		email,
+		postcode,
+		address,
+		country,
+		province,
+		city,
+		regional,
+		road,
+		nationality,
+		nativeplace,
+		srctype,
+		lastmodifytime,
+		origuid,
+		creditevaluate,
+		cstcode,
+		company,
+		position,
+		incoming,
+		workaddr,
+		companytel,
+		race,
+		religion,
+		political,
+		ismerried,
+		lasttouchtime,
+		recenttouch,
+		lastassigntime,
+		recentassign,
+		lastappointtime,
+		recentappoint,
+		cognichannel,
+		status,
+		memguid,
+		staffguid,
+		ownerguid,
+		createtime,
+		cardid15,
+		level,
+		conflict,
+		contact,
+		soutype,
+		oldcstguidlist,
+		newcstguid
+		from
+		cst_customer
+		where origuid =  #{origuid}
+    </select>
+    
+    
+    <select id="getCstMemberByGuid" resultMap="CstMemberMap" parameterType="java.lang.String">
+		select
+		memguid,
+		orimemguid,
+		cstguid,
+		oricstguid,
+		buguid,
+		memcode,
+		logpwd,
+		memstation,
+		specialtype,
+		joinpath,
+		joindate,
+		issendjoinnote,
+		ljpoint,
+		applydate,
+		shr,
+		shdate,
+		ljsjpoint,
+		cardstatus,
+		makecardreason,
+		postcarddate,
+		tjr,
+		tjrmemcode,
+		tjrrelation,
+		tjremark,
+		projname,
+		xckid,
+		xckpwd,
+		saler,
+		getmemlevelway,
+		holdlevelbegindate,
+		holdlevelenddate,
+		oldmemcode,
+		makecarddate,
+		memlevel,
+		maxmemlevel,
+		memstatus,
+		statusdate,
+		statusreason,
+		statushr,
+		oldstatus,
+		tellist,
+		accountid,
+		bind_date
+		from
+		cst_member
+		where orimemguid =  #{orimemguid}
+    </select>
+    
+    
+    
+    <select id="getCstMemberByCstid" resultMap="CstMemberMap" parameterType="java.lang.Long">
+		select
+		memguid,
+		orimemguid,
+		cstguid,
+		oricstguid,
+		buguid,
+		memcode,
+		logpwd,
+		memstation,
+		specialtype,
+		joinpath,
+		joindate,
+		issendjoinnote,
+		ljpoint,
+		applydate,
+		shr,
+		shdate,
+		ljsjpoint,
+		cardstatus,
+		makecardreason,
+		postcarddate,
+		tjr,
+		tjrmemcode,
+		tjrrelation,
+		tjremark,
+		projname,
+		xckid,
+		xckpwd,
+		saler,
+		getmemlevelway,
+		holdlevelbegindate,
+		holdlevelenddate,
+		oldmemcode,
+		makecarddate,
+		memlevel,
+		maxmemlevel,
+		memstatus,
+		statusdate,
+		statusreason,
+		statushr,
+		oldstatus,
+		tellist,
+		accountid,
+		bind_date
+		from
+		cst_member
+		where cstguid =  #{cstguid}
+    </select>
+
+
+	<insert id="insertCustomer" parameterType="CstCustomer">
+		insert into
+		cst_customer(
+		cstguid,
+		cstname,
+		csttype,
+		cardtype,
+		cardid,
+		mobiletel,
+		hometel,
+		email,
+		address,
+		province,
+		city,
+		regional,
+		road,
+		origuid,
+		position,
+		createtime,
+		cardid15
+		)
+		values
+		(
+		#{cstguid},
+		#{cstname},
+		#{csttype},
+		#{cardtype},
+		#{cardid},
+		#{mobiletel},
+		#{hometel},
+		#{email},
+		#{address},
+		#{province},
+		#{city},
+		#{regional},
+		#{road},
+		#{createtime},
+		#{cardid15}
+		)
+	</insert>
+
+	
+
+	<update id="updateCustomer" parameterType="CstCustomer">
+		update cst_customer
+		set
+		cstguid = #{cstguid},
+		cstname = #{cstname},
+		language = #{language},
+		csttype = #{csttype},
+		cardtype = #{cardtype},
+		cardid = #{cardid},
+		mobiletel = #{mobiletel},
+		hometel = #{hometel},
+		fax = #{fax},
+		email = #{email},
+		address = #{address},
+		province = #{province},
+		city = #{city},
+		regional = #{regional},
+		road = #{road},
+		createtime = #{createtime},
+		cardid15 = #{cardid15}
+		where cstguid =
+		#{cstguid}
+	</update>
+	
+	<insert id="insertMember" parameterType="CstMember">
+		insert into
+		cst_member(
+		memguid,
+		orimemguid,
+		cstguid,
+		oricstguid,
+		buguid,
+		memcode,
+		joinpath,
+		joindate,
+		ljpoint,
+		applydate,
+		memstation,
+		maxmemlevel,
+		memstatus
+		)
+		values
+		(
+		#{memguid},
+		#{orimemguid},
+		#{cstguid},
+		#{oricstguid},
+		#{buguid},
+		#{memcode},
+		#{joinpath},
+		#{joindate},
+		#{ljpoint},
+		#{applydate},
+		#{memstation},
+		#{maxmemlevel},
+		#{memstatus}
+		)
+	</insert>
+
+	<update id="updateMember" parameterType="CstMember">
+		update cst_member
+		set
+		memguid        =		#{memguid},    
+		orimemguid     =		#{orimemguid}, 
+		cstguid        =		#{cstguid},    
+		oricstguid     =		#{oricstguid}, 
+		buguid         =		#{buguid},     
+		memcode        =		#{memcode},    
+		joinpath       =		#{joinpath},   
+		joindate       =		#{joindate},   
+		ljpoint        =		#{ljpoint},    
+		applydate      =		#{applydate},  
+		memstation     =		#{memstation}, 
+		maxmemlevel    =		#{maxmemlevel},
+		memstatus      =		#{memstatus}   
+		where memguid =
+		#{memguid}
+	</update>
+
+	
+	
+	<select id="isHaveBind" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from cst_auth where cstguid =
+		#{cstguid}
+	</select>
+	
+	
+	<update id="deleteByGuid" parameterType="java.lang.String">
+		delete from cst_customer
+		where origuid =
+		#{origuid}
+	</update>
+	
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update cst_customer
+		set
+		state = 2
+		where cstguid =
+		#{cstguid}
+	</update>
+
+	
+	<update id="deleteCustomers" parameterType="List">
+		delete from cst_customer
+		where origuid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="deleteMembers" parameterType="List">
+		delete from cst_customer
+		where origuid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+
+
+</mapper>

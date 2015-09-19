@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.report.dao.LogLabelMonthDao">
+	 
+
+	 <resultMap id="LogLabelMonthMap" type="LogLabelMonth" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="year" property="year" jdbcType="VARCHAR" />
+		<result column="month" property="month" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="parent_name" property="parentName" jdbcType="VARCHAR" />
+		<result column="label_id" property="labelId" jdbcType="INTEGER" />
+		<result column="label_name" property="labelName" jdbcType="VARCHAR" />
+		<result column="req_nums" property="reqNums" jdbcType="BIGINT" />
+		<result column="user_nums" property="userNums" jdbcType="BIGINT" />
+
+	 </resultMap>
+
+	<select id="getLogLabelMonthList" resultMap="LogLabelMonthMap" parameterType="java.util.Map">
+		select
+		id,
+		year,
+		month,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		from
+		log_label_month
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             logLabelMonth_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+	        <if test="parentId != null">  
+	            and 
+	            (
+	             parent_id =#{parentId}
+	            )  
+	        </if>
+	         <if test="year != null">  
+	            and 
+	            (
+	             year =#{year}
+	            )  
+	        </if>
+	        <if test="month != null">  
+	            and 
+	            (
+	             month =#{month}
+	            )  
+	        </if>
+	        <if test="labelId != null">  
+	            and 
+	            (
+	             label_id =#{labelId}
+	            )  
+	        </if>
+        </where>
+        order by id desc
+	</select>
+
+	<select id="getHaveLogLabelMonthList" resultMap="LogLabelMonthMap">
+		select
+		id,
+		year,
+		month,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		from
+		log_label_month
+		where id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</select>
+
+	<select id="getLogLabelMonthById" resultMap="LogLabelMonthMap" parameterType="java.lang.String">
+		select
+		id,
+		year,
+		month,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		from
+		log_label_month
+		where id =  #{id}
+    </select>
+
+	<insert id="insert" parameterType="LogLabelMonth">
+		insert into
+		log_label_month(
+		id,
+		year,
+		month,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		)
+		values
+		(
+		#{id},
+		#{year},
+		#{month},
+		#{parentId},
+		#{parentName},
+		#{labelId},
+		#{labelName},
+		#{reqNums},
+		#{userNums}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		log_label_month(
+		id,
+		year,
+		month,
+		parent_id,
+		parent_name,
+		label_id,
+		label_name,
+		req_nums,
+		user_nums
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.id},
+			#{obj.year},
+			#{obj.month},
+			#{obj.parentId},
+			#{obj.parentName},
+			#{obj.labelId},
+			#{obj.labelName},
+			#{obj.reqNums},
+			#{obj.userNums}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="LogLabelMonth">
+		update log_label_month
+		set
+		id = #{id},
+		year = #{year},
+		month = #{month},
+		parent_id = #{parentId},
+		parent_name = #{parentName},
+		label_id = #{labelId},
+		label_name = #{labelName},
+		req_nums = #{reqNums},
+		user_nums = #{userNums}
+		where id =
+		#{id}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update log_label_month
+			set
+			id = #{obj.id},
+			year = #{obj.year},
+			month = #{obj.month},
+			parent_id = #{obj.parentId},
+			parent_name = #{obj.parentName},
+			label_id = #{obj.labelId},
+			label_name = #{obj.labelName},
+			req_nums = #{obj.reqNums},
+			user_nums = #{obj.userNums}
+			where id =
+			#{obj.id}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.String">
+		select
+		count(*) from log_label_month where id =
+		#{id}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.String">
+		update log_label_month
+		set
+		state = 2
+		where id =
+		#{id}
+	</update>
+	<update id="delete" parameterType="java.lang.String">
+		delete from log_label_month
+		where id =
+		#{id}
+	</update>
+
+	<select id="getLogLabelMonthCount" resultType="int">
+		select count(1)
+		from log_label_month
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select id from log_label_month
+	</select>
+
+</mapper>

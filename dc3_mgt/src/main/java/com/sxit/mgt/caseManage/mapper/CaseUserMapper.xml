@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.caseManage.dao.CaseUserDao">
+	 
+
+	 <resultMap id="CaseUserMap" type="TcasUser" >
+	    <id column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="guid" property="guid" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="open_id" property="openId" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
+		<result column="company_id" property="companyId" jdbcType="BIGINT" />
+		<result column="job_state" property="jobState" jdbcType="INTEGER" />
+		<result column="leave_date" property="leaveDate" jdbcType="DATE" />
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+	 </resultMap>
+
+	<select id="getCaseUserList" resultMap="CaseUserMap" parameterType="java.util.Map">
+		select
+		user_id,
+		guid,
+		user_name,
+		login_name,
+		mobile,
+		open_id,
+		state,
+		user_type,
+		company_id,
+		job_state,
+		leave_date,
+		role_id,
+		role_name,
+		create_time
+		from
+		tcas_user
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             user_name like CONCAT('%','${searchTxt}','%' ) or
+	             login_name like CONCAT('%','${searchTxt}','%' ) or
+	             mobile like CONCAT('%','${searchTxt}','%' ) or
+	             open_id like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+	        <if test="userType != null">
+	          and user_type = #{userType}
+	        </if>
+	        <if test="userState != null">
+	          and state = #{userState}
+	        </if>
+	        <if test="companyId != null">
+	          and company_id = #{companyId}
+	        </if>
+        </where>
+        order by user_id desc
+	</select>
+
+	<select id="getHaveCaseUserList" resultMap="CaseUserMap">
+		select
+		user_id,
+		guid,
+		user_name,
+		login_name,
+		mobile,
+		open_id,
+		state,
+		user_type,
+		company_id,
+		job_state,
+		leave_date,
+		role_id,
+		role_name,
+		create_time
+		from
+		tcas_user
+		where user_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.userId}
+		</foreach>
+	</select>
+
+	<select id="getCaseUserById" resultMap="CaseUserMap" parameterType="java.lang.Long">
+		select
+		user_id,
+		guid,
+		user_name,
+		login_name,
+		mobile,
+		open_id,
+		state,
+		user_type,
+		company_id,
+		job_state,
+		leave_date,
+		role_id,
+		role_name,
+		create_time
+		from
+		tcas_user
+		where user_id =  #{userId}
+    </select>
+
+	<insert id="insert" parameterType="TcasUser">
+		insert into
+		tcas_user(
+		user_id,
+		guid,
+		user_name,
+		login_name,
+		mobile,
+		password,
+		open_id,
+		state,
+		user_type,
+		company_id,
+		job_state,
+		leave_date,
+		role_id,
+		role_name,
+		create_time
+		)
+		values
+		(
+		#{userId},
+		#{guid},
+		#{userName},
+		#{loginName},
+		#{mobile},
+		#{password},
+		#{openId},
+		#{state},
+		#{userType},
+		#{companyId},
+		#{jobState},
+		#{leaveDate},
+		#{roleId},
+		#{roleName},
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		tcas_user(
+		user_id,
+		guid,
+		user_name,
+		login_name,
+		mobile,
+		password,
+		open_id,
+		state,
+		user_type,
+		company_id,
+		job_state,
+		leave_date,
+		role_id,
+		role_name,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.userId},
+			#{obj.guid},
+			#{obj.userName},
+			#{obj.loginName},
+			#{obj.mobile},
+			#{obj.password},
+			#{obj.openId},
+			#{obj.state},
+			#{obj.userType},
+			#{obj.companyId},
+			#{obj.jobState},
+			#{obj.leaveDate},
+			#{obj.roleId},
+			#{obj.roleName},
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="TcasUser">
+		update tcas_user
+		set
+		user_id = #{userId},
+		guid = #{guid},
+		user_name = #{userName},
+		login_name = #{loginName},
+		mobile = #{mobile},
+		password = #{password},
+		open_id = #{openId},
+		state = #{state},
+		user_type = #{userType},
+		company_id = #{companyId},
+		job_state = #{jobState},
+		leave_date = #{leaveDate},
+		role_id = #{roleId},
+		role_name = #{roleName},
+		create_time = #{createTime}
+		where user_id =
+		#{userId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update tcas_user
+			set
+			user_id = #{obj.userId},
+			guid = #{obj.guid},
+			user_name = #{obj.userName},
+			login_name = #{obj.loginName},
+			mobile = #{obj.mobile},
+			password = #{obj.password},
+			open_id = #{obj.openId},
+			state = #{obj.state},
+			user_type = #{obj.userType},
+			company_id = #{obj.companyId},
+			job_state = #{obj.jobState},
+			leave_date = #{obj.leaveDate},
+			role_id = #{obj.roleId},
+			role_name = #{obj.roleName},
+			create_time = #{obj.createTime}
+			where user_id =
+			#{obj.userId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from tcas_user where user_id =
+		#{userId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update tcas_user
+		set
+		state = 2
+		where user_id =
+		#{userId}
+	</update>
+	<update id="delete" parameterType="java.lang.Long">
+		delete from tcas_user
+		where user_id =
+		#{userId}
+	</update>
+
+	<select id="getCaseUserCount" resultType="int">
+		select count(1)
+		from tcas_user
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select user_id from tcas_user
+	</select>
+
+</mapper>

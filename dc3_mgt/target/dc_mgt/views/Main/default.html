@@ -1,0 +1,10 @@
+﻿<div>
+    <div ng-Controller="defaultController" ng-init="initializeController()">       
+       欢迎使用深讯后台管理！{{UserName}}
+        <div style="padding-top:20px; ">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><div ng-bind-html="MessageBox"></div></alert>
+        </div>
+
+
+    </div>
+</div>

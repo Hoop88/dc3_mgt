@@ -1,0 +1,13 @@
+{
+    "header":{
+        "code":0,
+        "message":"请求成功"
+    },
+    "data":{
+        "userId":1,
+        "userName":"张如兵",
+        "corpName":null,
+        "depName":null,
+        "userType":1
+    }
+}

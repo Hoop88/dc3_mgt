@@ -1,0 +1,123 @@
+<div ng-controller="sysExportListController" ng-init="initializeController()">
+  <div class="btn-toolbar">
+    <input type="hidden" name="hidIsReLoad" id="hidIsReLoad" />
+    <div class="btn-group"></div>
+  </div>
+  <div class="well" style="min-height:450px;">
+    <div class="top_search form-inline">
+      <div class="form-group">
+        <input type="text" name="title" placeholder="请输入检索关键字:'导出配置名称'" ng-model="searchTxt" maxlength="100" class="input-xlarge form-control">
+      </div>
+      <a sysExport="button" ng-click="getSysExports('search');" class="btn btn-success"><i class="glyphicon glyphicon-search"></i> 查询</a> <a class="btn purple" sysExport="button" ng-click="addModal();"><i class="glyphicon glyphicon-plus"></i> 添加</a> </div>
+    <table class="table table-striped table-hover table-bordered">
+      <thead>
+        <tr>
+	                     <th>导出编码</th>
+                    <th>导出名称</th>
+	 	    
+	 <th class="text-center" style="width:200px"> 操作 </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="sysExport in SysExports" ng-class="{'tableTrColor':sysExport.IsCurrent==1}" on-finish-render-filters>
+                          <td> {{sysExport.exportCode}} </td>
+                <td> {{sysExport.name}} </td> 
+
+          <td class="text-center">
+            <a class="btn btn-info btn-xs" type="button" ui-sref="System.SysExportColumn({id:{{sysExport.exportId}}})" data-toggle="modal"  title="设置"> <span class="glyphicon glyphicon-edit"></span> 设置 </a>
+          	<button class="btn btn-info btn-xs" type="button" href="#" data-toggle="modal" ng-click="editModal(sysExport.exportId);" title="修改"> <span class="glyphicon glyphicon-edit"></span> 修改 </button>
+            <button class="btn btn-danger btn-xs" type="button" href="#basic" data-toggle="modal" ng-click="deleteOne(sysExport.exportId);"> <span class="glyphicon glyphicon-trash"  title="删除"></span> 删除 </button></td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination max-size="10" rotate="false" boundary-links="true" total-items="TotalRows" items-per-page="pageSize"
+                    ng-change="pageChanged()" ng-model="currentPage" class="pagination-sm"
+                    previous-text="上一页" next-text="下一页" first-text="首页" last-text="末页" style="margin: 0; display: block;"></pagination>
+    <span class="pagination_span">共{{TotalRows}}条,每页{{pageSize}}条,第{{currentPage}}页</span>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" msg="{{alert.msg}}" close="closeAlert($index)" ng-show="false"></alert>
+  </div>
+
+    <script type="text/ng-template" id="addModal.html">
+        <div>
+            <form class="form-horizontal" sysExport="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}导出配置</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="exportId" />
+                    <table class="table table-striped table-bordered table-hover">
+
+		                        <tr>
+                  <td width="20%">导出编码:</td>
+                  <td width="80%">
+                   <input type="text" name="exportCode"  required ng-model="sysExportModal.exportCode" ng-minlength="3" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.exportCode.$error.required">必填</span>
+                    <span ng-show="myForm.exportCode.$error.minlength">太短</span>
+                    <span ng-show="myForm.exportCode.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">导出名称:</td>
+                  <td width="80%">
+                   <input type="text" name="name"  required ng-model="sysExportModal.name" ng-minlength="3" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.name.$error.required">必填</span>
+                    <span ng-show="myForm.name.$error.minlength">太短</span>
+                    <span ng-show="myForm.name.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(exportId,thisSysExportNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+    <script type="text/ng-template" id="editModal.html">
+        <div>
+            <form class="form-horizontal" sysExport="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}导出配置</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="exportId" />
+                    <table class="table table-striped table-bordered table-hover">
+		                       <tr>
+                  <td width="20%">导出编码:</td>
+                  <td width="80%">
+                   <input type="text" name="exportCode"  required ng-model="sysExportModal.exportCode" ng-minlength="3" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.exportCode.$error.required">必填</span>
+                    <span ng-show="myForm.exportCode.$error.minlength">太短</span>
+                    <span ng-show="myForm.exportCode.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">导出名称:</td>
+                  <td width="80%">
+                   <input type="text" name="name"  required ng-model="sysExportModal.name" ng-minlength="3" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.name.$error.required">必填</span>
+                    <span ng-show="myForm.name.$error.minlength">太短</span>
+                    <span ng-show="myForm.name.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(exportId,thisSysExportNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+</div>

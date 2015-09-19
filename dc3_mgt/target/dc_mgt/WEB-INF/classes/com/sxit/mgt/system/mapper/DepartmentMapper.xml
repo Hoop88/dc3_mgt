@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.DepartmentDao">
+	 
+
+	 <resultMap id="DepartmentMap" type="SysDepartment" >
+	    <id column="dep_id" property="depId" jdbcType="INTEGER" />
+		<result column="dep_name" property="depName" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime"  jdbcType="TIMESTAMP"   />
+
+	 </resultMap>
+
+	<select id="getDepartmentList" resultMap="DepartmentMap" parameterType="java.util.Map">
+		select
+		dep_id,
+		dep_name,
+		parent_id,
+		create_time
+		from
+		sys_department
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             department_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by dep_id
+	</select>
+
+	<select id="getHaveDepartmentList" resultMap="DepartmentMap">
+		select
+		dep_id,
+		dep_name,
+		parent_id,
+		create_time
+		from
+		sys_department
+		where dep_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.depId}
+		</foreach>
+	</select>
+
+	<select id="getDepartmentById" resultMap="DepartmentMap" parameterType="java.lang.Integer">
+		select
+		dep_id,
+		dep_name,
+		parent_id,
+		create_time
+		from
+		sys_department
+		where dep_id =  #{depId}
+    </select>
+
+	<insert id="insert" parameterType="SysDepartment">
+		insert into
+		sys_department(
+		dep_id,
+		dep_name,
+		parent_id,
+		create_time
+		)
+		values
+		(
+		#{depId},
+		#{depName},
+		#{parentId},
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_department(
+		dep_id,
+		dep_name,
+		parent_id,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.depId},
+			#{obj.depName},
+			#{obj.parentId},
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysDepartment">
+		update sys_department
+		set
+		dep_id = #{depId},
+		dep_name = #{depName},
+		parent_id = #{parentId},
+		create_time = #{createTime}
+		where dep_id =
+		#{depId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_department
+			set
+			dep_id = #{obj.depId},
+			dep_name = #{obj.depName},
+			parent_id = #{obj.parentId},
+			create_time = #{obj.createTime}
+			where dep_id =
+			#{obj.depId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from sys_department where dep_id =
+		#{depId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update sys_department
+		set
+		state = 2
+		where dep_id =
+		#{depId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from sys_department
+		where dep_id =
+		#{depId}
+	</update>
+
+	<select id="getDepartmentCount" resultType="int">
+		select count(1)
+		from sys_department
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select dep_id from sys_department
+	</select>
+
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.caseManage.dao.TeamDao">
+	 
+
+	 <resultMap id="TeamMap" type="TcasTeam" >
+	    <id column="team_id" property="teamId" jdbcType="BIGINT" />
+		<result column="team_guid" property="teamGuid" jdbcType="VARCHAR" />
+		<result column="team_name" property="teamName" jdbcType="VARCHAR" />
+		<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+		<result column="company_id" property="companyId" jdbcType="BIGINT" />
+		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+	 </resultMap>
+
+	<select id="getTeamList" resultMap="TeamMap" parameterType="java.util.Map">
+		select
+		team_id,
+		team_guid,
+		team_name,
+		project_code,
+		company_id,
+		company_name,
+		state,
+		create_time
+		from
+		tcas_team
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             team_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by team_id desc
+	</select>
+
+	<select id="getHaveTeamList" resultMap="TeamMap">
+		select
+		team_id,
+		team_guid,
+		team_name,
+		project_code,
+		company_id,
+		company_name,
+		state,
+		create_time
+		from
+		tcas_team
+		where team_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.teamId}
+		</foreach>
+	</select>
+
+	<select id="getTeamById" resultMap="TeamMap" parameterType="java.lang.Long">
+		select
+		team_id,
+		team_guid,
+		team_name,
+		project_code,
+		company_id,
+		company_name,
+		state,
+		create_time
+		from
+		tcas_team
+		where team_id =  #{teamId}
+    </select>
+
+	<insert id="insert" parameterType="TcasTeam">
+		insert into
+		tcas_team(
+		team_id,
+		team_guid,
+		team_name,
+		project_code,
+		company_id,
+		company_name,
+		state,
+		create_time
+		)
+		values
+		(
+		#{teamId},
+		#{teamGuid},
+		#{teamName},
+		#{projectCode},
+		#{companyId},
+		#{companyName},
+		#{state},
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		tcas_team(
+		team_id,
+		team_guid,
+		team_name,
+		project_code,
+		company_id,
+		company_name,
+		state,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.teamId},
+			#{obj.teamGuid},
+			#{obj.teamName},
+			#{obj.projectCode},
+			#{obj.companyId},
+			#{obj.companyName},
+			#{obj.state},
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="TcasTeam">
+		update tcas_team
+		set
+		team_id = #{teamId},
+		team_guid = #{teamGuid},
+		team_name = #{teamName},
+		project_code = #{projectCode},
+		company_id = #{companyId},
+		company_name = #{companyName},
+		state = #{state},
+		create_time = #{createTime}
+		where team_id =
+		#{teamId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update tcas_team
+			set
+			team_id = #{obj.teamId},
+			team_guid = #{obj.teamGuid},
+			team_name = #{obj.teamName},
+			project_code = #{obj.projectCode},
+			company_id = #{obj.companyId},
+			company_name = #{obj.companyName},
+			state = #{obj.state},
+			create_time = #{obj.createTime}
+			where team_id =
+			#{obj.teamId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from tcas_team where team_id =
+		#{teamId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update tcas_team
+		set
+		state = 2
+		where team_id =
+		#{teamId}
+	</update>
+	<update id="delete" parameterType="java.lang.Long">
+		delete from tcas_team
+		where team_id =
+		#{teamId}
+	</update>
+
+	<select id="getTeamCount" resultType="int">
+		select count(1)
+		from tcas_team
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select team_id from tcas_team
+	</select>
+
+</mapper>

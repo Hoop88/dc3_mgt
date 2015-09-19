@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.RoleDao">
+
+
+	<resultMap id="RoleMap" type="SysRole">
+		<id column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="role_type" property="roleType" jdbcType="INTEGER" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="role_flag" property="roleFlag" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+	</resultMap>
+
+	<select id="getRoleList" resultMap="RoleMap" parameterType="java.util.Map">
+		select
+		role_id,
+		role_name,
+		role_type,
+		description,
+		role_flag,
+		create_time
+		from
+		sys_role
+		<where>
+			<if test="searchTxt != null">
+				and
+				(
+				role_name like CONCAT('%','${searchTxt}','%' )
+				)
+			</if>
+		</where>
+		order by role_id
+	</select>
+
+	<select id="getHaveRoleList" resultMap="RoleMap">
+		select
+		role_id,
+		role_name,
+		role_type,
+		description,
+		role_flag,
+		create_time
+		from
+		sys_role
+		where role_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.roleId}
+		</foreach>
+	</select>
+
+	<select id="getRoleById" resultMap="RoleMap" parameterType="java.lang.Integer">
+		select
+		role_id,
+		role_name,
+		role_type,
+		description,
+		role_flag,
+		create_time
+		from
+		sys_role
+		where role_id = #{roleId}
+	</select>
+
+	<insert id="insert" parameterType="SysRole">
+		insert into
+		sys_role(
+		role_id,
+		role_name,
+		role_type,
+		description,
+		role_flag,
+		create_time
+		)
+		values
+		(
+		#{roleId},
+		#{roleName},
+		#{roleType},
+		#{description},
+		2,
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="addPower" parameterType="java.util.Map">
+		insert into
+		sys_role_function(
+		role_id,
+		function_id
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{roleId},
+			#{obj.id}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="deletePower" parameterType="java.util.Map">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			delete from sys_role_function where role_id =#{roleId} and
+			function_id=#{obj.id}
+		</foreach>
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_role(
+		role_id,
+		role_name,
+		role_type,
+		description,
+		role_flag,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.roleId},
+			#{obj.roleName},
+			#{obj.roleType},
+			#{obj.description},
+			2,
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysRole">
+		update sys_role
+		set
+		role_id =
+		#{roleId},
+		role_name = #{roleName},
+		role_type = #{roleType},
+		description
+		= #{description},
+		create_time = #{createTime}
+		where role_id =
+		#{roleId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_role
+			set
+			role_id = #{obj.roleId},
+			role_name =
+			#{obj.roleName},
+			role_type = #{obj.roleType},
+			description =
+			#{obj.description},
+			create_time = #{obj.createTime}
+			where role_id =
+			#{obj.roleId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from sys_role where role_id =
+		#{roleId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update sys_role
+		set
+		state = 2
+		where role_id =
+		#{roleId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from sys_role
+		where
+		role_id =
+		#{roleId}
+	</update>
+
+	<select id="getRoleCount" resultType="int">
+		select count(1)
+		from
+		sys_role
+	</select>
+
+	<select id="getFunctionIdList" resultType="IdVo" parameterType="java.lang.Integer">
+		select function_id as id from sys_role_function where role_id =
+		#{roleId}
+	</select>
+
+</mapper>

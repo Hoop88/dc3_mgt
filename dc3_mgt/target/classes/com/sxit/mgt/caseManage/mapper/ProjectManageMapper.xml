@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.caseManage.dao.ProjectManageDao">
+
+
+	<resultMap id="ProjectManageMap" type="TcasProject">
+		<id column="project_id" property="projectId" jdbcType="BIGINT" />
+		<result column="project_guid" property="projectGuid" jdbcType="VARCHAR" />
+		<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+		<result column="project_name" property="projectName" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+		<result column="project_type" property="projectType" jdbcType="INTEGER" />
+		<result column="company_id" property="companyId" jdbcType="BIGINT" />
+		<result column="pm_station_guid" property="pmStationGuid" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ProjectTreeMap" type="TcasProject">
+		<id column="project_id" property="projectId" jdbcType="BIGINT" />
+		<result column="project_guid" property="projectGuid" jdbcType="VARCHAR" />
+		<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+		<result column="project_name" property="projectName" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="project_type" property="projectType" jdbcType="INTEGER" />
+		<result column="company_id" property="companyId" jdbcType="BIGINT" />
+		<collection property="children" ofType="TcasProject"
+			column="project_id">
+			<result column="c_project_id" property="projectId" jdbcType="BIGINT" />
+			<result column="c_project_guid" property="projectGuid"
+				jdbcType="VARCHAR" />
+			<result column="c_project_code" property="projectCode"
+				jdbcType="VARCHAR" />
+			<result column="c_project_name" property="projectName"
+				jdbcType="VARCHAR" />
+			<result column="c_city" property="city" jdbcType="VARCHAR" />
+			<result column="c_state" property="state" jdbcType="INTEGER" />
+		</collection>
+	</resultMap>
+
+	<sql id="projectWhere">
+		<where>
+			<if test="searchTxt != null">
+				and
+				(
+				project_name like CONCAT('%','${searchTxt}','%' )
+				or
+				project_code like CONCAT('%','${searchTxt}','%' )
+				)
+				
+			</if>
+			and project_type = 1
+		</where>
+		order by project_id desc
+	</sql>
+
+
+	<select id="getProjectTreeList" resultMap="ProjectTreeMap"
+		parameterType="java.util.Map">
+		select
+		a.project_id,
+		a.project_guid,
+		a.project_code,
+		a.project_name,
+		a.city,
+		a.state,
+		a.project_type,
+		a.company_id,
+		b.project_id c_project_id,
+		b.project_guid c_project_guid,
+		b.project_code c_project_code,
+		b.project_name c_project_name,
+		b.city c_city,
+		b.state c_state,
+		b.project_type c_project_type,
+		b.company_id c_company_id
+		from
+		(
+		select
+		project_id,
+		project_guid,
+		project_code,
+		project_name,
+		city,
+		state,
+		project_type,
+		company_id
+		from
+		tcas_project
+		<include refid="projectWhere" />
+		limit #{startRecord},#{pageSize}
+		) a
+		left join tcas_project b on a.project_id = b.parent_id
+	</select>
+
+	<select id="getProjectTreeCount" resultType="int" parameterType="java.util.Map">
+		select count(1)
+		from tcas_project
+		<include refid="projectWhere" />
+	</select>
+
+	<select id="getProjectManageList" resultMap="ProjectManageMap"
+		parameterType="java.util.Map">
+		select
+		project_id,
+		project_guid,
+		project_code,
+		project_name,
+		city,
+		state,
+		parent_code,
+		parent_id,
+		project_type,
+		company_id,
+		pm_station_guid
+		from
+		tcas_project
+		<include refid="projectWhere" />
+	</select>
+
+	<select id="getHaveProjectManageList" resultMap="ProjectManageMap">
+		select
+		project_id,
+		project_guid,
+		project_code,
+		project_name,
+		city,
+		state,
+		parent_code,
+		parent_id,
+		project_type,
+		company_id
+		from
+		tcas_project
+		where
+		project_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.projectId}
+		</foreach>
+	</select>
+
+	<select id="getProjectManageById" resultMap="ProjectManageMap"
+		parameterType="java.lang.Long">
+		select
+		project_id,
+		project_guid,
+		project_code,
+		project_name,
+		city,
+		state,
+		parent_code,
+		parent_id,
+		project_type,
+		company_id,
+		pm_station_guid
+		from
+		tcas_project
+		where project_id = #{projectId}
+	</select>
+
+	<insert id="insert" parameterType="TcasProject">
+		insert into
+		tcas_project(
+		project_id,
+		project_guid,
+		project_code,
+		project_name,
+		city,
+		state,
+		parent_code,
+		parent_id,
+		project_type,
+		company_id,
+		pm_station_guid
+		)
+		values
+		(
+		#{projectId},
+		#{projectGuid},
+		#{projectCode},
+		#{projectName},
+		#{praentId},
+		#{city},
+		#{state},
+		#{parentCode},
+		#{parentId},
+		#{projectType},
+		#{companyId},
+		#{pmStationGuid}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		tcas_project(
+		project_id,
+		project_guid,
+		project_code,
+		project_name,
+		city,
+		state,
+		parent_code,
+		parent_id,
+		project_type,
+		company_id
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.projectId},
+			#{obj.projectGuid},
+			#{obj.projectCode},
+			#{obj.projectName},
+			#{obj.praentId},
+			#{obj.city},
+			#{obj.state},
+			#{obj.parentCode},
+			#{obj.parentId},
+			#{obj.projectType},
+			#{obj.companyId}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="TcasProject">
+		update tcas_project
+		set
+		project_id = #{projectId},
+		project_guid = #{projectGuid},
+		project_code =
+		#{projectCode},
+		project_name = #{projectName},
+		city = #{city},
+		state =
+		#{state},
+		parent_code = #{parentCode},
+		parent_id = #{parentId},
+		project_type = #{projectType},
+		company_id = #{companyId},
+		pm_station_guid = #{pmStationGuid}
+		where
+		project_id =
+		#{projectId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update tcas_project
+			set
+			project_id = #{obj.projectId},
+			project_guid =
+			#{obj.projectGuid},
+			project_code = #{obj.projectCode},
+			project_name =
+			#{obj.projectName},
+
+			city = #{obj.city},
+			state = #{obj.state},
+			parent_code = #{obj.parentCode},
+			parent_id = #{obj.parentId},
+			project_type = #{obj.projectType},
+			company_id = #{obj.companyId}
+			where
+			project_id =
+			#{obj.projectId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from tcas_project where project_id =
+		#{projectId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update tcas_project
+		set
+		state = 2
+		where project_id =
+		#{projectId}
+	</update>
+	<update id="delete" parameterType="java.lang.Long">
+		delete from tcas_project
+		where
+		project_id =
+		#{projectId}
+	</update>
+	
+	<select id="getProjectManageCount" resultType="int">
+		select count(1)
+		from tcas_project
+	</select>
+
+	<select id="getProjectCode1MapList" resultMap="ProjectManageMap">
+		select project_code,project_name from
+		tcas_project
+		where 
+		project_type = 1
+	</select>
+	
+	<select id="getProjectCodeMapList" resultMap="ProjectManageMap">
+		select project_code,project_name from
+		tcas_project
+	</select>
+
+	<select id="getCheckAllCompanyProject" resultType="com.sxit.mgt.caseManage.dto.CheckCompanyVo" parameterType="java.lang.String">
+		select company_id id,company_name name  from 
+		tcas_company where company_type=2 and project_code = #{projectCode}
+		order by company_id;
+	</select>
+
+	<select id="getCheckedCompanyProject" resultType="com.sxit.mgt.caseManage.dto.CheckCompanyVo" parameterType="java.lang.Long">
+		select company_id id,ac_station_guid code  from 
+		tcas_company_project where project_id = #{projectId}
+	</select>
+	
+	<update id="deleteCompanyList" parameterType="java.lang.Long">
+		delete from tcas_company_project
+		where
+		project_id =
+		#{projectId}
+	</update>
+	
+	<insert id="addCompanyList" parameterType="java.util.Map">
+		insert into
+		tcas_company_project(
+		project_id,
+		company_id,
+		ac_station_guid
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{projectId},
+			#{obj.id},
+			#{obj.code}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

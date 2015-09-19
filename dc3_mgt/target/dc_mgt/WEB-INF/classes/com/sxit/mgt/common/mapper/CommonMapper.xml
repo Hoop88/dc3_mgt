@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.common.dao.CommonDao">
+	
+	
+	
+	 <resultMap id="ParamsMap" type="SysParams" >
+	    <id column="params_id" property="paramsId" jdbcType="BIGINT" />
+		<result column="params_name" property="paramsName" jdbcType="VARCHAR" />
+		<result column="params_value" property="paramsValue" jdbcType="VARCHAR" />
+		<result column="params_desc" property="paramsDesc" jdbcType="VARCHAR" />
+
+	 </resultMap>
+	 
+	 <select id="getParamsList" resultMap="ParamsMap" parameterType="java.util.Map">
+		select
+		params_id,
+		params_name,
+		params_value,
+		params_desc
+		from
+		sys_params t
+		<where>  
+			<if test="params_name != null">  
+		       and
+		        t.params_name=#{paramsName}
+		    </if>
+	        <if test="params_names != null">  
+	            and 
+	           t.params_name in (#{paramsNames})
+	        </if>
+        </where>
+        order by params_id desc
+	</select>
+
+
+
+
+	
+	<select id="getSysParamsList" resultType="StringMap">
+		select params_name as keystr,params_value as valuestr from sys_params
+	</select>
+	
+	
+	
+	
+	<select id="getPathRight" resultType="StringMap">
+		select a.action as keystr,b.function_code as valuestr from sys_menu a
+		join sys_function b  on a.function_id = b.function_id and b.state=1
+	</select>
+
+</mapper>

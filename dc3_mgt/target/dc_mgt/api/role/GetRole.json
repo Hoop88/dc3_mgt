@@ -1,0 +1,14 @@
+{
+    "header":{
+        "code":0,
+        "message":"请求成功"
+    },
+    "data":{
+			 "roleId": 1,
+			 "roleName": "管理员",
+			 "roleType": 1,
+			 "description": "管理员"
+			 
+		 }
+}
+

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.system.dao.SysExportDao">
+	 
+
+	 <resultMap id="SysExportMap" type="SysExport" >
+	    <id column="export_id" property="exportId" jdbcType="INTEGER" />
+		<result column="export_code" property="exportCode" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+
+	 </resultMap>
+	 
+	 <select id="getAllExportList" resultMap="SysExportMap">
+		select
+		export_id,
+		export_code,
+		name
+		from
+		sys_export
+        order by export_id
+	</select>
+
+	<select id="getSysExportList" resultMap="SysExportMap" parameterType="java.util.Map">
+		select
+		export_id,
+		export_code,
+		name
+		from
+		sys_export
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             sysExport_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+        </where>
+        order by export_id desc
+	</select>
+
+	<select id="getHaveSysExportList" resultMap="SysExportMap">
+		select
+		export_id,
+		export_code,
+		name
+		from
+		sys_export
+		where export_id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.exportId}
+		</foreach>
+	</select>
+
+	<select id="getSysExportById" resultMap="SysExportMap" parameterType="java.lang.Integer">
+		select
+		export_id,
+		export_code,
+		name
+		from
+		sys_export
+		where export_id =  #{exportId}
+    </select>
+
+	<insert id="insert" parameterType="SysExport">
+		insert into
+		sys_export(
+		export_id,
+		export_code,
+		name
+		)
+		values
+		(
+		#{exportId},
+		#{exportCode},
+		#{name}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		sys_export(
+		export_id,
+		export_code,
+		name
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.exportId},
+			#{obj.exportCode},
+			#{obj.name}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="SysExport">
+		update sys_export
+		set
+		export_id = #{exportId},
+		export_code = #{exportCode},
+		name = #{name}
+		where export_id =
+		#{exportId}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update sys_export
+			set
+			export_id = #{obj.exportId},
+			export_code = #{obj.exportCode},
+			name = #{obj.name}
+			where export_id =
+			#{obj.exportId}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*) from sys_export where export_id =
+		#{exportId}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Integer">
+		update sys_export
+		set
+		state = 2
+		where export_id =
+		#{exportId}
+	</update>
+	<update id="delete" parameterType="java.lang.Integer">
+		delete from sys_export
+		where export_id =
+		#{exportId}
+	</update>
+
+	<select id="getSysExportCount" resultType="int">
+		select count(1)
+		from sys_export
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select export_id from sys_export
+	</select>
+
+</mapper>

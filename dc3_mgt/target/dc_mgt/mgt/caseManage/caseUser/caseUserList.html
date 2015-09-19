@@ -1,0 +1,322 @@
+<div ng-controller="caseUserListController" ng-init="initializeController()">
+  <div class="btn-toolbar">
+    <input type="hidden" name="hidIsReLoad" id="hidIsReLoad" />
+    <div class="btn-group"></div>
+  </div>
+  <div class="well" style="min-height:450px;">
+      <div class="top_search form-inline">
+        <div class="row">
+          <div class="col-md-11">
+            <div class="form-group">
+				所属公司:
+               <select ng-model="companyId" ng-options="o.id as o.name for o in allCompanyList" 
+				   class=" input-middle">
+                  
+			   </select>
+               类别:
+               <select ng-model="userType" ng-options="o.id as o.name for o in caseUserTypeList" 
+				   class="form-control input-short">
+                   
+			   </select>
+               状态:
+               <select ng-model="userState" ng-options="o.id as o.name for o in caseUserStateList" 
+				   class="form-control input-short">
+                   
+			   </select>
+               
+             </div>
+             <div class="form-group">
+               
+               
+               <input type="text" name="title" placeholder="请输入检索内容"
+               ng-keypress="enter($event)"
+               ng-model="searchTxt" maxlength="100" class="input-middle form-control">
+                <a sysUser="button" ng-click="getCaseUsers('search');" class="btn btn-success"><i class="glyphicon glyphicon-search"></i> 查询</a>
+            </div>
+            </div>
+          <div class="col-md-1 "> <a class="btn grey-salt pull-right" sysUser="button" ng-click="exportExcel();"><i class="glyphicon glyphicon-share-alt"></i> 导出</a> </div>
+        </div>
+      </div>
+
+    <table class="table table-striped table-hover table-bordered">
+      <thead>
+        <tr>
+	                
+                    <th>用户名称</th>
+                    <th>登录名</th>
+                    <th>手机号码</th>
+                    <th>微信ID</th>
+                    <th>用户类别</th>
+                    <th>用户状态</th>
+                    <th>工作状态</th>
+                    <th>所属公司</th>
+	 	    
+	 <th class="text-center" width="16%"> 操作 </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="caseUser in CaseUsers" ng-class="{'tableTrColor':caseUser.IsCurrent==1}" on-finish-render-filters>
+                
+                <td class="text-center"> {{caseUser.userName}} </td>
+                <td class="text-center"> {{caseUser.loginName}} </td>
+                <td class="text-center"> {{caseUser.mobile}} </td>
+                <td class="text-center"> {{caseUser.openId}} </td>
+                <td class="text-center"> {{caseUserTypeMap[caseUser.userType]}} </td>
+                <td 
+                 ng-class="{'text-center':true, 
+                 'success': caseUser.state==1,
+                 'danger': caseUser.state==2
+                 }"> {{caseUserStateMap[caseUser.state]}} </td>
+                <td 
+                 ng-class="{'text-center':true, 
+                 'success': caseUser.jobState==0,
+                 'warning': caseUser.jobState==1||caseUser.jobState==2,
+                 'danger': caseUser.jobState==3
+                 }"> {{caseJobStateMap[caseUser.jobState]}} </td>
+                <td class="text-center">
+                	{{allCompanyMap[caseUser.companyId]}} 
+                </td>
+
+          <td class="text-center">
+          	<button class="btn btn-info btn-xs" type="button" href="#" data-toggle="modal" ng-click="editModal(caseUser.userId);" title="修改"> <span class="glyphicon glyphicon-edit"></span> 修改 </button>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination max-size="10" rotate="false" boundary-links="true" total-items="TotalRows" items-per-page="pageSize"
+                    ng-change="pageChanged()" ng-model="currentPage" class="pagination-sm"
+                    previous-text="上一页" next-text="下一页" first-text="首页" last-text="末页" style="margin: 0; display: block;"></pagination>
+    <span class="pagination_span">共{{TotalRows}}条,每页{{pageSize}}条,第{{currentPage}}页</span>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" msg="{{alert.msg}}" close="closeAlert($index)" ng-show="false"></alert>
+  </div>
+
+    <script type="text/ng-template" id="addModal.html">
+        <div>
+            <form class="form-horizontal" caseUser="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}案场用户</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="userId" />
+                    <table class="table table-striped table-bordered table-hover">
+
+			    <tr>
+                  <td width="20%">用户名称:</td>
+                  <td width="80%">
+                   <input type="text" name="userName"  required ng-model="caseUserModal.userName" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.userName.$error.required">必填</span>
+                    <span ng-show="myForm.userName.$error.minlength">太短</span>
+                    <span ng-show="myForm.userName.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">登录名:</td>
+                  <td width="80%">
+                   <input type="text" name="loginName"  required ng-model="caseUserModal.loginName" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.loginName.$error.required">必填</span>
+                    <span ng-show="myForm.loginName.$error.minlength">太短</span>
+                    <span ng-show="myForm.loginName.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">用户GUID:</td>
+                  <td width="80%">
+                   <input type="text" name="guid"  ng-model="caseUserModal.guid"  class="input-xlarge">
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">手机号码:</td>
+                  <td width="80%">
+                   <input type="text" name="mobile"  ng-model="caseUserModal.mobile" ng-minlength="10" ng-maxlength="13" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.mobile.$error.minlength">太短</span>
+                    <span ng-show="myForm.mobile.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">密码:</td>
+                  <td width="80%">
+                   <input type="text" name="password" ng-model="caseUserModal.password" ng-minlength="6" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.password.$error.minlength">太短</span>
+                    <span ng-show="myForm.password.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">绑定的微信ID:</td>
+                  <td width="80%">
+                   <input type="text" name="openId" ng-model="caseUserModal.openId" ng-minlength="5" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.openId.$error.minlength">太短</span>
+                    <span ng-show="myForm.openId.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">所属公司:</td>
+                  <td width="80%">{{allCompanyMap[caseUserModal.companyId]}}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">用户类别:</td>
+                  <td width="80%">
+                   
+                   <label ng-repeat="type in caseUserTypeList" style=" padding-right:10px">
+						<input type="radio" name="userType" ng-value="type.id" ng-model="caseUserModal.userType"/> {{type.name}}
+					</label>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">状态:</td>
+                  <td width="80%">
+                      <label ng-repeat="state in caseUserStateList" style=" padding-right:10px">
+                        <input type="radio" name="state" ng-value="state.id" ng-model="caseUserModal.state"/> {{state.name}}
+                      </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">工作状态:</td>
+                  <td width="80%">
+				   <select ng-model="caseUserModal.jobState" ng-options="o.id as o.name for o in caseJobStateList" 
+				   class="form-control input-xlarge">
+				   </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">离职时间:</td>
+                  <td width="80%">{{caseUserModal.leaveDate}}
+                  </td>
+                </tr>
+                </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(userId,thisCaseUserNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+    <script type="text/ng-template" id="editModal.html">
+        <div>
+            <form class="form-horizontal" caseUser="form" name="myForm" novalidate>
+                <div class="modal-header">
+                    <h3 class="modal-title">{{HeaderText}}案场用户</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" ng-model="userId" />
+               <table class="table table-striped table-bordered table-hover">
+			    <tr>
+                  <td width="20%">用户名称:</td>
+                  <td width="80%">
+                   <input type="text" name="userName"  required ng-model="caseUserModal.userName" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.userName.$error.required">必填</span>
+                    <span ng-show="myForm.userName.$error.minlength">太短</span>
+                    <span ng-show="myForm.userName.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">登录名:</td>
+                  <td width="80%">
+                   <input type="text" name="loginName"  required ng-model="caseUserModal.loginName" ng-minlength="2" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.loginName.$error.required">必填</span>
+                    <span ng-show="myForm.loginName.$error.minlength">太短</span>
+                    <span ng-show="myForm.loginName.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">用户GUID:</td>
+                  <td width="80%">
+                   <input type="text" name="guid"  ng-model="caseUserModal.guid"  class="input-xlarge">
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">手机号码:</td>
+                  <td width="80%">
+                   <input type="text" name="mobile"  ng-model="caseUserModal.mobile" ng-minlength="10" ng-maxlength="13" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.mobile.$error.minlength">太短</span>
+                    <span ng-show="myForm.mobile.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">密码:</td>
+                  <td width="80%">
+                   <input type="text" name="password" ng-model="caseUserModal.password" ng-minlength="6" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.password.$error.minlength">太短</span>
+                    <span ng-show="myForm.password.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">绑定的微信ID:</td>
+                  <td width="80%">
+                   <input type="text" name="openId" ng-model="caseUserModal.openId" ng-minlength="5" ng-maxlength="100" class="input-xlarge">
+                   <span style="color:red">
+                    <span ng-show="myForm.openId.$error.minlength">太短</span>
+                    <span ng-show="myForm.openId.$error.maxlength">太长</span>
+                   </span>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">所属公司:</td>
+                  <td width="80%">{{allCompanyMap[caseUserModal.companyId]}}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">用户类别:</td>
+                  <td width="80%">
+                   
+                   <label ng-repeat="type in caseUserTypeList" style=" padding-right:10px">
+						<input type="radio" name="userType" ng-value="type.id" ng-model="caseUserModal.userType"/> {{type.name}}
+					</label>
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">状态:</td>
+                  <td width="80%">
+                      <label ng-repeat="state in caseUserStateList" style=" padding-right:10px">
+                        <input type="radio" name="state" ng-value="state.id" ng-model="caseUserModal.state"/> {{state.name}}
+                      </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">工作状态:</td>
+                  <td width="80%">
+				   <select ng-model="caseUserModal.jobState" ng-options="o.id as o.name for o in caseJobStateList" 
+				   class="form-control input-xlarge">
+				   </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">离职时间:</td>
+                  <td width="80%">{{caseUserModal.leaveDate}}
+                  </td>
+                </tr>
+				<tr>
+                  <td width="20%">创建时间:</td>
+                  <td width="80%">{{caseUserModal.createTime |strToDate|date:'yyyy年MM月dd日'}} 
+                  </td>
+                </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok(userId,thisCaseUserNameToEdit,thisDescriptionToEdit)">提交</button>
+                    <button class="btn btn-warning" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </script> 
+</div>

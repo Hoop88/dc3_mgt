@@ -1,0 +1,96 @@
+/* here you can put your own css to customize and override the theme */
+
+/***
+Rounded Portlets
+***/
+/*
+.portlet {
+	border-radius: 4px !important;
+}
+
+.portlet .portlet-title {
+	border-radius: 4px 4px 0px 0px !important;
+}
+
+.portlet .portlet-body,
+.portlet .portlet-body .form-actions  {
+	border-radius: 0px 0px 4px 4px !important;
+}
+*/
+
+/* logo */
+body{ font-family:"microsoft yahei"}
+.page-top .pull-left .admin_title{ font-size:24px; padding:15px 0 0 20px; display:block;}
+.portlet.box > .portlet-title{ background-color:#FFF; margin-bottom:1px;}
+.mrgin_btm10{ margin-bottom:10px;}
+.btn_box{ width:220px;}
+.sub_title{ color:#14b9d6; font-size:16px; font-weight:bold; padding:10px 0; }
+.portlet > .portlet-title > .tools{ padding:4px;}
+.bg-white{ background-color:#FFF;}
+.date_long{width:245px;}
+.bg-white .table > tbody > tr > td{ vertical-align:middle;}
+.table-responsive{ margin-top:10px;}
+.table.table-bordered thead > tr > th {
+    background-color:#fbfbfb; 
+	background:-moz-linear-gradient(top, #fbfbfb, #ececec);  
+    background:-webkit-gradient(linear, 0 0, 0 bottom, from(#fbfbfb), to(#ececec));  
+    background:-o-linear-gradient(top, #fbfbfb, #ececec);
+}
+.name_title{ text-align:right; line-height:35px; font-weight:bold;}
+.name_msg{ text-align:left; line-height:35px;}
+.radio-padding-top{ padding-top:8px;}
+.page_msg{ display:inline-block; line-height:35px; margin:10px auto; height:35px; padding:0 20px;}
+.table_border_no > tbody > tr > td{ border:none;}
+.modal-title{ font-weight:bold; font-family:"microsoft yahei"}
+
+
+.well{background-color:#fff;min-height:101%;}
+
+.top_search{margin-bottom: 10px;}
+.page-header.navbar.navbar-fixed-top{z-index: 1000;}
+
+.pagination_span{line-height: 29px; margin-left: 5px;}
+
+
+.input-xlarge{width: 300px!important; line-height: 24px; vertical-align: middle; padding-left:4px; padding-right: 4px;}
+.input-middle{width: 200px!important; line-height: 24px; vertical-align: middle; padding-left:4px; padding-right: 4px; height:30px}
+.input-short{width: 100px!important; line-height: 24px; vertical-align: middle; padding-left:4px; padding-right: 4px; height:30px}
+
+.page-position{color:#888;}
+
+.block-ui-overlay.block-ui-visible{opacity: 0;}
+
+
+.modal-dialog .table td{line-height: 24px;}
+
+
+.checkBoxLabel{width:25%; float:left; display:inline; line-height:16px;}
+
+.checkBoxLabel2{width:50%; float:left; display:inline; line-height:30px;}
+
+td .checkBoxLabel:nth-child(4n + 1){clear:both;}
+
+.table.table-bordered thead > tr > th{text-align:center;}
+.modal-body .table tr td:nth-child(1){font-weight:bold; text-align:right;}
+.form-control{border-color:#a9a9a9; padding-top:2px; padding-bottom:2px; height:30px;}
+input{outline:none;}
+
+
+
+/* div.checker input{opacity: 1; }
+div.checker input{-webkit-appearance:checkbox;} */
+
+.opend td{background-color:#f5f5f5;}
+
+.checkBoxLabel2 label{widht:130px; float:left; display:inline;}
+.checkBoxLabel2 div.work{margin-left:130px;}
+
+.proxy_company{position:relative;}
+.proxy_company:after{content:""; display:inline-block; width:1px; height:96%; border-left:1px dashed #dedede; position:absolute; left:50%; margin-left:-1px; top:2%;}
+td .checkBoxLabel2:nth-child(even){padding-left:10px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+
+#stationInfo{top:73px;}
+.success{color:#3b9c96;}
+.danger{color:#F3565D;}
+.purple{color:#8e44ad;}
+.warning{color:#dfba49;}

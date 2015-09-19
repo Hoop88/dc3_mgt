@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.caseManage.dao.StationDao">
+	 
+
+	 <resultMap id="StationMap" type="TcasStation" >
+	    <id column="station_guid" property="stationGuid" jdbcType="VARCHAR" />
+		<result column="station_name" property="stationName" jdbcType="VARCHAR" />
+		<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+		<result column="parent_guid" property="parentGuid" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+	 </resultMap>
+
+	<select id="getStationList" resultMap="StationMap" parameterType="java.util.Map">
+		select
+		station_guid,
+		station_name,
+		project_code,
+		parent_guid,
+		create_time
+		from
+		tcas_station
+		<where>  
+	        <if test="searchTxt != null">  
+	            and 
+	            (
+	             station_name like CONCAT('%','${searchTxt}','%' )
+	            )  
+	        </if>
+	        <if test="projectCode != null and parentCode != null">  
+	            and 
+	            (
+	             project_code = #{projectCode}
+	             
+	            )  
+	        </if>	        
+        </where>
+        order by station_guid desc
+	</select>
+
+	<select id="getHaveStationList" resultMap="StationMap">
+		select
+		station_guid,
+		station_name,
+		project_code,
+		parent_guid,
+		create_time
+		from
+		tcas_station
+		where station_guid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.stationGuid}
+		</foreach>
+	</select>
+
+	<select id="getStationById" resultMap="StationMap" parameterType="java.lang.String">
+		select
+		station_guid,
+		station_name,
+		project_code,
+		parent_guid,
+		create_time
+		from
+		tcas_station
+		where station_guid =  #{stationGuid}
+    </select>
+
+	<insert id="insert" parameterType="TcasStation">
+		insert into
+		tcas_station(
+		station_guid,
+		station_name,
+		project_code,
+		parent_guid,
+		create_time
+		)
+		values
+		(
+		#{stationGuid},
+		#{stationName},
+		#{projectCode},
+		#{parentGuid},
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		tcas_station(
+		station_guid,
+		station_name,
+		project_code,
+		parent_guid,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.stationGuid},
+			#{obj.stationName},
+			#{obj.projectCode},
+			#{obj.parentGuid},
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="TcasStation">
+		update tcas_station
+		set
+		station_guid = #{stationGuid},
+		station_name = #{stationName},
+		project_code = #{projectCode},
+		parent_guid = #{parentGuid},
+		create_time = #{createTime}
+		where station_guid =
+		#{stationGuid}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update tcas_station
+			set
+			station_guid = #{obj.stationGuid},
+			station_name = #{obj.stationName},
+			project_code = #{obj.projectCode},
+			parent_guid = #{obj.parentGuid},
+			create_time = #{obj.createTime}
+			where station_guid =
+			#{obj.stationGuid}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.String">
+		select
+		count(*) from tcas_station where station_guid =
+		#{stationGuid}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.String">
+		update tcas_station
+		set
+		state = 2
+		where station_guid =
+		#{stationGuid}
+	</update>
+	<update id="delete" parameterType="java.lang.String">
+		delete from tcas_station
+		where station_guid =
+		#{stationGuid}
+	</update>
+
+	<select id="getStationCount" resultType="int">
+		select count(1)
+		from tcas_station
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select station_guid from tcas_station
+	</select>
+
+</mapper>

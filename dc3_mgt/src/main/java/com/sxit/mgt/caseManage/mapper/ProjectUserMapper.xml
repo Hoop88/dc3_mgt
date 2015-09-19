@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sxit.mgt.caseManage.dao.ProjectUserDao">
+	 
+
+	 <resultMap id="ProjectUserMap" type="TcasProjectUser" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+		<result column="project_id" property="projectId" jdbcType="BIGINT" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
+		<result column="first_choice" property="firstChoice" jdbcType="INTEGER" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="role_id" property="roleId" jdbcType="VARCHAR" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="company_id" property="companyId" jdbcType="BIGINT" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+	 </resultMap>
+
+	<select id="getProjectUserList" resultMap="ProjectUserMap" parameterType="java.util.Map">
+		select
+		a.id,
+		a.user_id,
+		a.user_name,
+		a.project_code,
+		a.project_id,
+		CASE 
+           WHEN ISNULL(b.open_id) THEN 0
+           WHEN b.open_id='' THEN 0
+           ELSE 1
+        END flag,
+		a.first_choice,
+		a.mobile,
+		a.role_id,
+		a.role_name,
+		a.company_id,
+		a.state,
+		a.create_time
+		from
+		tcas_project_user a
+		left join tcas_user b on a.user_id = b.user_id
+		<where>  
+	        <if test="searchTxt != null and searchTxt !=''">  
+	            and 
+	            (
+	             a.user_name like CONCAT('%','${searchTxt}','%' )
+	             or
+	             a.mobile =#{searchTxt}
+	             or
+	             a.role_name like CONCAT('%','${searchTxt}','%' )
+	            ) 
+	        </if>
+	        and project_id = #{projectId}
+        </where>
+        order by role_id,company_id
+	</select>
+
+	<select id="getHaveProjectUserList" resultMap="ProjectUserMap">
+		select
+		id,
+		user_id,
+		user_name,
+		project_code,
+		project_id,
+		flag,
+		first_choice,
+		mobile,
+		role_id,
+		role_name,
+		company_id,
+		state,
+		create_time
+		from
+		tcas_project_user
+		where id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item.id}
+		</foreach>
+	</select>
+
+	<select id="getProjectUserById" resultMap="ProjectUserMap" parameterType="java.lang.Long">
+		select
+		id,
+		user_id,
+		user_name,
+		project_code,
+		project_id,
+		flag,
+		first_choice,
+		mobile,
+		role_id,
+		role_name,
+		company_id,
+		state,
+		create_time
+		from
+		tcas_project_user
+		where id =  #{id}
+    </select>
+
+	<insert id="insert" parameterType="TcasProjectUser">
+		insert into
+		tcas_project_user(
+		id,
+		user_id,
+		user_name,
+		project_code,
+		project_id,
+		flag,
+		first_choice,
+		mobile,
+		role_id,
+		role_name,
+		company_id,
+		state,
+		create_time
+		)
+		values
+		(
+		#{id},
+		#{userId},
+		#{userName},
+		#{projectCode},
+		#{projectId},
+		#{flag},
+		#{firstChoice},
+		#{mobile},
+		#{roleId},
+		#{roleName},
+		#{companyId},
+		#{state},
+		#{createTime}
+		)
+	</insert>
+
+	<insert id="insertList" parameterType="java.util.List">
+		insert into
+		tcas_project_user(
+		id,
+		user_id,
+		user_name,
+		project_code,
+		project_id,
+		flag,
+		first_choice,
+		mobile,
+		role_id,
+		role_name,
+		company_id,
+		state,
+		create_time
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.id},
+			#{obj.userId},
+			#{obj.userName},
+			#{obj.projectCode},
+			#{obj.projectId},
+			#{obj.flag},
+			#{obj.firstChoice},
+			#{obj.mobile},
+			#{obj.roleId},
+			#{obj.roleName},
+			#{obj.companyId},
+			#{obj.state},
+			#{obj.createTime}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="TcasProjectUser">
+		update tcas_project_user
+		set
+		id = #{id},
+		user_id = #{userId},
+		user_name = #{userName},
+		project_code = #{projectCode},
+		project_id = #{projectId},
+		flag = #{flag},
+		first_choice = #{firstChoice},
+		mobile = #{mobile},
+		role_id = #{roleId},
+		role_name = #{roleName},
+		company_id = #{companyId},
+		state = #{state},
+		create_time = #{createTime}
+		where id =
+		#{id}
+	</update>
+
+	<update id="updateList" parameterType="List">
+		<foreach collection="list" item="obj" index="index" separator=";">
+			update tcas_project_user
+			set
+			id = #{obj.id},
+			user_id = #{obj.userId},
+			user_name = #{obj.userName},
+			project_code = #{obj.projectCode},
+			project_id = #{obj.projectId},
+			flag = #{obj.flag},
+			first_choice = #{obj.firstChoice},
+			mobile = #{obj.mobile},
+			role_id = #{obj.roleId},
+			role_name = #{obj.roleName},
+			company_id = #{obj.companyId},
+			state = #{obj.state},
+			create_time = #{obj.createTime}
+			where id =
+			#{obj.id}
+		</foreach>
+	</update>
+
+	<select id="isHave" resultType="int" parameterType="java.lang.Long">
+		select
+		count(*) from tcas_project_user where id =
+		#{id}
+	</select>
+
+	<update id="updateToDelete" parameterType="java.lang.Long">
+		update tcas_project_user
+		set
+		state = 2
+		where id =
+		#{id}
+	</update>
+	<update id="delete" parameterType="java.lang.Long">
+		delete from tcas_project_user
+		where id =
+		#{id}
+	</update>
+
+	<select id="getProjectUserCount" resultType="int">
+		select count(1)
+		from tcas_project_user
+	</select>
+
+	<select id="getIdList" resultType="String">
+		select id from tcas_project_user
+	</select>
+
+</mapper>

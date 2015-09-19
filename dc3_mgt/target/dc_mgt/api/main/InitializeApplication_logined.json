@@ -1,0 +1,45 @@
+{
+    "MenuItems": [{
+        "MenuItems": [],
+        "ID": 0,
+        "MenuName": "首页",
+        "Href": "Main",
+        "Navigation": "",
+        "ParentID": 0,
+        "ClassName": "icon-home"
+    },
+    {
+        "MenuItems": [{
+            "MenuItems": [],
+            "ID": 18,
+            "MenuName": "用户管理",
+            "Href": "Manage.Accounts",
+            "Navigation": "系统管理 > 用户管理",
+            "ParentID": 1,
+            "ClassName": "icon-settings"
+        }, {
+            "MenuItems": [],
+            "ID": 6,
+            "MenuName": "会议管理",
+            "Href": "Manage.Meet",
+            "Navigation": "系统管理 > 会议管理",
+            "ParentID": 1,
+            "ClassName": "icon-globe"
+        }],
+        "ID": 1,
+        "MenuName": "系统管理",
+        "Href": "Manage.Accounts",
+        "Navigation": "系统管理 > 用户管理",
+        "ParentID": 0,
+        "ClassName": "icon-folder-alt"
+    }],
+    "ValidationErrors": {},
+    "TotalPages": 0,
+    "TotalRows": 0,
+    "pageSize": 0,
+    "IsAuthenicated": true,
+    "ReturnStatus": true,
+    "ReturnMessage": ["Santhine"],
+    "RowNumber": 0,
+    "HeaderPic": "images/avatar3_small.jpg"
+}
